@@ -1,0 +1,5 @@
+          <ul *ngIf="alberoProgrammazioneService?.programmazioneAperta">
+            <li>
+              <elemento-albero [isConsuntivazione]="alberoProgrammazioneService.isConsuntivazione" [livello]="1" [elementoProgrammazione]="alberoProgrammazioneService.programmazioneAperta"></elemento-albero>
+            </li>
+          </ul>

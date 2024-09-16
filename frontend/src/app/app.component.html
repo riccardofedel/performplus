@@ -1,0 +1,195 @@
+<main>
+
+  <div class="sidebar" *ngIf="currentUser">
+    <ul>
+      <li>
+        <a [routerLink]="['/home']" [ngClass]="{'active':isActive('home')}">
+          <img src="./assets/img/home.png" />
+          <span>{{"home"|translate}}</span>
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/sistema']" [ngClass]="{'active':isActive('sistema')}"  *ngIf="permissionService.getPermission(currentUser,Permission.Sistema,true)">
+          <img src="./assets/img/gear.png" />
+          <span>{{"sistema"|translate}}</span>
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/struttura']" [ngClass]="{'active':isActive('struttura')}"  *ngIf="permissionService.getPermission(currentUser,Permission.Struttura,true)">
+          <img src="./assets/img/hierarchical-structure.png" />
+          <span>{{"struttura"|translate}}</span>
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/programmazione']" [ngClass]="{'active':isActive('programmazione')}"  *ngIf="permissionService.getPermission(currentUser,Permission.Dup,true)">
+          <img src="./assets/img/calculator.png" />
+          <span>{{"programmazione"|translate}}</span>
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/stampe']" [ngClass]="{'active':isActive('stampe')}"  *ngIf="permissionService.getPermission(currentUser,Permission.Stampe,true)">
+          <img src="./assets/img/printer.png" />
+          <span>{{"stampe"|translate}}</span>
+        </a>
+      </li>
+     <li>
+        <a [routerLink]="['/performance']" [ngClass]="{'active':isActive('performance')}"  *ngIf="permissionService.getPermission(currentUser,Permission.Performance,true)">
+          <img src="./assets/img/performance.png" />
+          <span>{{"performance"|translate}}</span>
+        </a>
+      </li>
+    </ul>
+
+    
+  </div>
+
+  <div class="header">
+    <div class="d-flex flex-wrap align-items-center justify-content-center">
+
+      <div class="logo-content">
+        <img class="header-logo" [src]="'./assets/img/logo_community.png'" ><span class="ente">{{'' | translate}}</span>
+      </div>
+
+      <div class="appname-content">
+        <p class="header-subtitle">Community</p>
+      </div> 
+
+      <div class="logo-performplus"><img [src]="'./assets/img/performplus.png'" alt="logo PerformPlus"></div>
+
+      <div class="account-content text-end d-flex flex-wrap align-items-center justify-content-end">
+        <div class="dropdown" #dropdown *ngIf="currentUser">
+          <button class="btn btn-bd-light dropdown-toggle admin-btn" type="button" id="dropdownMenuButton1" (click)="dropdownHidden=!dropdownHidden">
+            {{currentUser.operator?.description}} - {{permissionService.annoCorrente(currentUser)}}
+            <img src="./assets/img/user.png">
+
+          </button>
+          <ul class="dropdown-menu dropdown-menu-shown" [hidden]="dropdownHidden" aria-labelledby="dropdownMenuButton1">
+            <!-- <li><a class="dropdown-item" (click)="cambiaPassword()">{{"cambia password"|translate}}</a></li> -->
+            <li><a class="dropdown-item" (click)="logout()">{{"logout"|translate}}</a></li>
+            <!-- <div class="dropdown-divider"></div> -->
+            <li *ngFor="let anno of anni"><a [ngClass]="{'active':permissionService.isAnno(currentUser,+anno)}" class="dropdown-item"
+                (click)="cambiaAnno(+anno)">{{anno}}</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+  
+
+<router-outlet></router-outlet>
+
+
+<!--
+<div class="content">
+  <div class="breadcrumb">Home / Sistema / Gestione utenti</div>
+  <div class="title">Sistema</div>
+
+  <div class="custom-tab-cnt">
+    <div class="custom-tab">Cruscotto</div>
+    <div class="custom-tab active">Sicurezza</div>
+  </div>
+
+  <div class="maincnt">
+    <div class="d-flex flex-wrap align-items-center justify-content-center">
+      <div class="col-6">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="" >
+          <button class="btn btn-primary" type="button">Cerca</button>
+        </div>
+      </div>
+      <div class="col-6 text-end">
+        <button type="button" class="btn btn-primary"><img src="./assets/img/icon.png"> Nuovo utente</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="clearfix"></div>
+
+  <div class="d-flex flex-wrap align-items-center">
+    <div class="container-fluid p-0">
+      <div class="row">
+        <div class="col-3">
+          <div class="box-3">
+            <div class="box-3-title">Valutatore</div>
+            <div class="box-3-text">Nome Cognome</div>
+          </div>
+        </div>
+
+        <div class="col-3">
+          <div class="box-3">
+            <div class="box-3-subtitle">Valutatore <img src="./assets/img/icon.png"></div>
+            <div class="box-3-value">75% <img src="./assets/img/icon.png"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="content">
+  <div class="breadcrumb">Home / Cruscotto</div>
+  <div class="title">Cruscotto amministratore</div>
+
+  <div class="custom-tab-cnt">
+    <div class="custom-tab">Cruscotto</div>
+    <div class="custom-tab active">Sicurezza</div>
+  </div>
+
+  <div class="subtitle">Programmazione</div>
+
+  <div class="box-2">
+    <div class="box-2-title">Stato piano </div><span class="box-2-title-value">80%</span>
+    <div class="clearfix"></div>
+    <div class="row justify-content-center">
+      <div class="col">
+        <table class="table align-middle table-responsive table-big">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">First</th>
+              <th scope="col">Last</th>
+              <th scope="col">Handle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">            </td>
+              <td>
+                <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+              </div>
+              </td>
+              <td>@mdo</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>@fat</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td colspan="2">Larry the Bird</td>
+              <td>@twitter</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+-->
+
+</main>
+
+
+
+<!--<a (click)="logout()" href="#">logout</a>-->

@@ -1,0 +1,89 @@
+<div class="modal-header">
+  <h5 class="modal-title" id="exampleModalLabel">
+    <span>{{'scadenza' |translate}} {{fieldsService.convertDate(consuntivazione?.dataRilevazione)}}</span>
+  </h5>
+  <button type="button" class="close" (click)="activeModal.close()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+
+  <span class="loading" *ngIf="loading">
+    <div class="lds-dual-ring"></div>
+  </span>
+
+  <div class="" *ngIf="!loading && creaForm">
+
+    <form [formGroup]="creaForm" (ngSubmit)="onSubmit()">
+
+      <div class="row">
+        
+        <div class="col-md-12 mb-2" >
+          {{risultato?.descrizione}}
+
+        </div>
+
+
+        <div class="col-md-12 mb-2"  *ngIf="risultato?.tipoFormula=='TIPO_FORMULA_DATA'">
+          <div class="input-group">
+            <input class="datepicker form-control" placeholder="" formControlName="valoreTemporale" ngbDatepicker
+            #valoreTemporale="ngbDatepicker">
+            <div class="input-group-append">
+              <button  class="btn btn-outline-secondary calendar"
+                (click)="valoreTemporale.toggle()" type="button"></button>
+            </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-12 mb-2"  *ngIf="risultato?.tipoFormula=='TIPO_FORMULA_BULEANO'">
+          <div class="form-check form-switch">
+            <input class="form-check-input" formControlName="valoreBooleano" type="checkbox">
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-2" *ngIf="risultato?.tipoFormula=='TIPO_FORMULA_NUMERO'">
+          <input type="number" class="form-control form-control-border" formControlName="valoreNumerico">
+        </div>
+
+        <div class="col-md-6 mb-2" *ngIf="risultato?.tipoFormula=='TIPO_FORMULA_RAPPORTO'">
+          {{risultato.numeratore}}
+        </div>
+
+        <div class="col-md-6 mb-2" *ngIf="risultato?.tipoFormula=='TIPO_FORMULA_RAPPORTO'">
+          {{risultato.denominatore}}
+        </div>
+
+        <div class="col-md-6 mb-2" *ngIf="risultato?.tipoFormula=='TIPO_FORMULA_RAPPORTO'">
+          <input type="number" class="form-control form-control-border" formControlName="valoreNumericoA">
+        </div>
+
+        <div class="col-md-6 mb-2" *ngIf="risultato?.tipoFormula=='TIPO_FORMULA_RAPPORTO'">
+          <input type="number" class="form-control form-control-border" formControlName="valoreNumericoB">
+        </div>
+
+         <div class="col-md-12 mb-2" >
+          {{'stato avanzamento' | translate}}
+        </div>
+        <div class="col-md-6 mb-3">
+            <textarea id="statoAvanzamento" class="form-control form-control-border" type="text"
+            maxlength="2000"
+              formControlName="statoAvanzamento" placeholder="{{'stato avanzamento' | translate}}"
+            ></textarea>
+         </div>
+
+        <div class="col-md-12 mb-3 text-right">
+          
+          <a (click)="activeModal.close()" type="button" class="btn btn-secondary">{{'annulla'|translate}}</a>
+          <button [disabled]="creaForm.invalid" class="btn btn-primary spaceleft10">{{'salva'|translate}}</button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+
+
+
+</div>

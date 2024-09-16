@@ -1,0 +1,333 @@
+<div class="content">
+  <div class="breadcrumb">
+    <a [routerLink]="['/home']">{{ "home" | translate }}</a> -
+    <a [routerLink]="['/performance']">{{ "performance" | translate }}</a>
+  </div>
+  <div class="title">{{ "priorita" | translate }}</div>
+
+  <performancebar page="priorita"></performancebar>
+
+  <div class="maincnt">
+    <span *ngIf="loading">
+      <div class="loader">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </span>
+    <div *ngIf="cercaForm">
+      <div
+        class="d-flex flex-wrap align-items-center justify-content-center"
+      ></div>
+      <form [formGroup]="cercaForm">
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <label>{{ "valutatore" | translate }}</label>
+            <ng-select
+              *ngIf="vuoto(valutatore)"
+              id="idValutatore"
+              bindLabel="cognome"
+              bindValue="id"
+              [disabled]="!vuoto(valutatore)"
+              formControlName="idValutatore"
+              (change)="onChangeValutatore($event)"
+              [items]="valutatori"
+              [clearable]=false
+              placeholder=" "
+            >
+              <ng-template ng-option-tmp let-item="item">
+                <label>{{ item.cognome + " " + item.nome +" ["+item.codiceInterno+"]"}}</label>
+              </ng-template>
+              <ng-template ng-label-tmp let-item="item">
+                <span>{{ item.cognome + " " + item.nome+" ["+item.codiceInterno+"]" }}</span>
+              </ng-template>
+            </ng-select>
+            <span *ngIf="!vuoto(valutatore)">
+              <label class="text-uppercase fs-4 fw-bold p-2">{{
+                nomeValutatore
+              }}</label>
+            </span>
+          </div>
+
+          <div class="col-md-3">
+            <label>{{ "valutato" | translate }}</label>
+            <ng-select
+              id="idValutato"
+              bindLabel="cognome"
+              bindValue="id"
+              [disabled]="!f.idValutatore"
+              [items]="valutati"
+              formControlName="idValutato"
+              (change)="onChangeValutato($event)"
+              [clearable]=false
+              placeholder=" "
+            >
+              <ng-template ng-option-tmp let-item="item">
+                <label>{{ item.cognome + " " + item.nome +" ["+item.codiceInterno+"]"}}</label>
+              </ng-template>
+              <ng-template ng-label-tmp let-item="item">
+                <span>{{ item.cognome + " " + item.nome +" ["+item.codiceInterno+"]"}}</span>
+              </ng-template>
+            </ng-select>
+          </div>
+          <div class="col-md-3">
+            <label>{{ "schede" | translate }}</label>
+            <ng-select
+              [id]="idRegistrazione"
+              bindLabel="inizio"
+              bindValue="idRegistrazione"
+              [items]="registrazioni"
+              formControlName="idRegistrazione"
+              (change)="onChangeValutazione($event)"
+              placeholder=" "
+              [disabled]="!f.idValutatore && !f.idValutato"
+              [clearable]=false
+            >
+              <ng-template ng-option-tmp let-item="item">
+                <label>{{ item.struttura + " " + item.fine }}</label>
+              </ng-template>
+              <ng-template ng-label-tmp let-item="item">
+                <span>{{ item.struttura + " " + item.fine }}</span>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div *ngIf="scheda" class="row">
+      <div class="col">
+        <label class="control-label">{{ "struttura" | translate }}</label>
+        <p class="fw-bold text-primary">
+          <label class="control-label">{{ scheda.struttura }}</label>
+        </p>
+      </div>
+      <div class="col">
+        <label class="" control-label>{{ "comportamenti" | translate }}</label>
+        <p class="fw-bold text-primary">
+          <label class="control-label">{{ scheda.questionario }}</label>
+        </p>
+      </div>
+      <div class="col">
+        <label>{{ "regolamento" | translate }}</label>
+        <p class="fw-bold text-primary">
+          <label class="fw-bold text-primary">{{ scheda.regolamento }}</label>
+        </p>
+      </div>
+      <!-- <div class="col">
+            <label>{{'inizio' | translate}}:</label>
+            <p class="fw-bold text-primary">
+            <label class="fw-bold text-primary">{{ fieldsService.convertDate(scheda.inizio)}}</label>
+            </p>
+          </div> -->
+      <div class="col">
+        <label>{{ "fine" | translate }}</label>
+        <p class="fw-bold text-primary">
+          <label class="fw-bold text-primary">{{
+            fieldsService.convertDate(scheda.fine)
+          }}</label>
+        </p>
+      </div>
+      <div class="col">
+        <label>{{ "responsabile" | translate }}</label>
+        <p class="fw-bold text-primary">
+          <label class="fw-bold text-primary">{{
+            scheda.responsabile === true ? "SI" : "NO"
+          }}</label>
+        </p>
+      </div>
+      <div class="col">
+        <label>{{ "interim" | translate }}</label>
+        <p class="fw-bold text-primary">
+          <label class="fw-bold text-primary">{{
+            scheda.interim === true ? "SI" : "NO"
+          }}</label>
+        </p>
+      </div>
+      <div class="col">
+        <label>{{ "po" | translate }}</label>
+        <p class="fw-bold text-primary">
+          <label class="fw-bold text-primary">{{
+            scheda.po === true ? "SI" : "NO"
+          }}</label>
+        </p>
+      </div>
+      <div class="col" *ngIf="scheda.responsabile !== true">
+        <label>{{ "performance organizzativa" | translate }}</label>
+        <p class="fw-bold text-primary">
+          <label class="fw-bold text-primary">{{
+            scheda.performanceOrganizzativa === true ? "SI" : "NO"
+          }}</label>
+          &nbsp; &nbsp;&nbsp;
+          <button
+            class="btn btn-secondary"
+            *ngIf="
+              scheda.idSchedaValutazione &&
+              scheda.abilitaPerformance === true &&
+              scheda.performanceOrganizzativa === true
+            "
+            (click)="rimuovoPerformance()"
+            title="{{ 'rimuovi performance organizzativa' | translate }}"
+          >
+            {{ "cambia" | translate }}
+          </button>
+          <button
+            class="btn btn-secondary"
+            *ngIf="
+              scheda.idSchedaValutazione &&
+              scheda.abilitaPerformance === true &&
+              scheda.performanceOrganizzativa !== true
+            "
+            (click)="aggiungiPerformance()"
+            title="{{ 'passa a performance organizzativa' | translate }}"
+          >
+            {{ "cambia" | translate }}
+          </button>
+        </p>
+      </div>
+      <div class="col" *ngIf="scheda">
+      <button
+          class="btn btn-primary"
+          [disabled]="!items ||items.length==0 || statoScheda?.dataPubblicazioneScheda"
+          (click)="completaPesatura()"
+          title="{{ 'completa pesatura' | translate }}"
+        >
+          <i-bs name="repeat"></i-bs>
+        </button>
+        </div>
+    </div>
+    <br />
+    <div
+      class="table-responsive"
+      *ngIf="!loading && scheda && scheda?.performanceOrganizzativa === true"
+    >
+      <table class="table align-middle table-big">
+        <thead>
+          <tr>
+            <th scope="col" class="col-md-3">
+              {{ "obiettivo" | translate }}
+            </th>
+            <th scope="col" class="col-md-3">
+              {{ "struttura" | translate }}
+            </th>
+            <th scope="col" class="col-md-3"></th>
+            <th scope="col" class="col-md-1"></th>
+            <th scope="col" class="col-md-1"></th>
+            <th scope="col" class="col-md-1">
+              {{ "peso totale" | translate }}
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr class="oddRow">
+            <td>
+              {{ "performance organizzativa" | translate }}
+            </td>
+            <td>{{ scheda.struttura }}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+              {{
+                scheda.pesoPerformanceOrganizzativa
+                  ? scheda.pesoPerformanceOrganizzativa + "%"
+                  : ""
+              }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <form
+      [formGroup]="saveForm"
+      (ngSubmit)="onSubmit()"
+      *ngIf="!loading && scheda && scheda?.performanceOrganizzativa !== true"
+    >
+      <div class="table-responsive" formArrayName="pesi">
+        <table class="table align-middle table-big">
+          <thead>
+            <tr>
+              <th scope="col" class="col-md-3">
+                {{ "obiettivo" | translate }}
+              </th>
+              <th scope="col" class="col-md-3">
+                {{ "struttura" | translate }}
+              </th>
+              <th scope="col" class="col-md-3">
+                {{ "indicatore" | translate }}
+              </th>
+              <th scope="col" class="col-md-1">
+                {{ "peso obiettivo" | translate }}
+              </th>
+              <th scope="col" class="col-md-1">
+                {{ "peso indicatore" | translate }}
+              </th>
+              <th scope="col" class="col-md-1">
+                {{ "peso totale" | translate }}
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr
+              *ngFor="let pr of items; let i = index"
+              [ngClass]="{ oddRow: pr.idNodo ? 0 : 1 }"
+            >
+              <td
+                [ngClass]="{
+                  'text-success': pr.peso && pr.peso > 0 && pr.sommaPesi == 100,
+                  'text-danger': pr.peso && pr.peso > 0 && pr.sommaPesi < 100
+                }"
+              >
+                {{ pr.idNodo ? pr.denominazioneNodo : "" }}
+              </td>
+              <td>{{ pr.idNodo ? pr.denominazioneStruttura : "" }}</td>
+              <td>{{ pr.idNodo ? "" : pr.denominazione }}</td>
+              <td [formGroupName]="i" *ngIf="!pr.idNodo"></td>
+              <td [formGroupName]="i" *ngIf="pr.idNodo">
+                <span
+                  [ngClass]="{
+                    'text-success':
+                      pr.peso && pr.peso > 0 && pr.sommaPesi == 100,
+                    'text-danger': pr.peso && pr.peso > 0 && pr.sommaPesi < 100
+                  }"
+                >
+                  <input [readonly]="statoScheda?.dataPubblicazioneScheda"
+                    type="number"
+                    class="form-control form-control-border w-1"
+                    formControlName="pesoNodo"
+                  />
+                </span>
+                <input type="hidden" formControlName="pesoIndicatore" />
+              </td>
+              <td [formGroupName]="i" *ngIf="!pr.idNodo">
+                <span>
+                  <input [readonly]="statoScheda?.dataPubblicazioneScheda"
+                    type="number"
+                    class="form-control form-control-border w-1"
+                    formControlName="pesoIndicatore"
+                  />
+                </span>
+                <input type="hidden" formControlName="pesoNodo" />
+              </td>
+              <td [formGroupName]="i" *ngIf="pr.idNodo"></td>
+              <td
+                [ngClass]="{
+                  'text-success': pr.peso && pr.peso > 0 && pr.sommaPesi == 100,
+                  'text-danger': pr.peso && pr.peso > 0 && pr.sommaPesi < 100
+                }"
+              >
+                {{ pr.idNodo ? pr.sommaPesi + "%" : "" }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-12 mb-3 text-right">
+        <button [disabled]="!items ||items.length==0 || saveForm.invalid || statoScheda?.dataPubblicazioneScheda" class="btn btn-primary">
+          {{ "salva" | translate }}</button
+        >&nbsp;
+      </div>
+    </form>
+  </div>
+</div>

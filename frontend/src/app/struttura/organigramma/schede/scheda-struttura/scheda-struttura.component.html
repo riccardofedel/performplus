@@ -1,0 +1,89 @@
+<div>
+  <span *ngIf="loading">
+    <div class="loader">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </span>
+  <div *ngIf="!loading && !readAllowed()">
+    {{"no read allowed"|translate}}
+  </div>
+  <div *ngIf="readAllowed() && !loading && currentStruttura">
+    <scheda-titolo (vaiAScheda)="vaiAScheda($event)" (eseguiRichiesta)="eseguiRichiesta($event)"
+      [currentStruttura]="currentStruttura" [writer]="writeAllowed()" [reader]="readAllowed()"
+      [scheda]="'/struttura/scheda'"></scheda-titolo>
+    <!-- <div class="box-2-title"><strong>{{"intestazione"|translate}}</strong>: {{intestazione}} </div> -->
+    <div class="clearfix"></div>
+    <div *ngIf="codice!=='ente'" class="box-2-title"><strong>{{"codice"|translate}}</strong>:
+      {{codiceRidotto}} </div>
+    <div class="clearfix"></div>
+    <div *ngIf="tipologiaStruttura" class="descrizione"><strong>{{"tipologia"|translate}}</strong>: {{tipologiaStruttura}}
+    </div>
+     <div class="clearfix"></div>
+    <div *ngIf="tipoStruttura" class="descrizione"><strong>{{"tipo"|translate}}</strong>: {{tipoStruttura}}
+    </div>
+    <div class="clearfix"></div>
+    <div *ngIf="descrizione" class="descrizione"><strong>{{"descrizione"|translate}}</strong>: {{descrizione}}
+    </div>
+    <div class="clearfix"></div>
+    <div *ngIf="responsabile" class="descrizione"><strong>{{"responsabile"|translate}}</strong>: {{responsabile.cognome}} {{responsabile.nome+ " ["+responsabile.codiceInterno+"]"}} </div>
+    <div class="clearfix"></div>
+    <div *ngIf="inizioValidita" class="descrizione"><strong>{{"inizio validita"|translate}}</strong>: {{inizioValidita}}
+    </div>
+    <div class="clearfix"></div>
+    <div *ngIf="fineValidita" class="descrizione"><strong>{{"fine validita"|translate}}</strong>: {{fineValidita}}</div>
+    <div class="clearfix"></div>
+
+  </div>
+  <br><br>
+  <div class="" *ngIf="cercaRisorseForm">
+        <form [formGroup]="cercaRisorseForm" (ngSubmit)="onSubmitCercaRisorse()">
+          <div class="row">
+            <div class="d-flex flex-wrap align-items-center">
+              <div class="col col-12 col-md-3">
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" formControlName="nome" placeholder="Cognome">
+                  <button class="btn btn-primary" type="submit">
+                    <i-bs name="search" width="1.5rem" height="1.5rem"></i-bs>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+    </form>
+  <table class="table align-middle table-responsive table-big" *ngIf="!loading">
+    <thead>
+      <tr>
+        <th scope="col">{{"cognome"|translate}}</th>
+        <th scope="col">{{"nome"|translate}}</th>
+        <th scope="col">{{"matricola"|translate}}</th>
+        <th scope="col">{{"codice struttura"|translate}}</th>
+        <th scope="col">{{"unita organizzativa"|translate}}</th>
+        <th scope="col">{{"inizio"|translate}}</th>
+        <th scope="col">{{"fine"|translate}}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let risorsa of risorse;let i=index"
+        [ngClass]="{'oddRow': (i%2)}">
+        <td >{{ risorsa.cognome }}</td>
+        <td >{{ risorsa.nome }}</td>
+        <td >{{ risorsa.codiceInterno }}</td>
+        <td >{{ risorsa.disponibilita[0].codiceStruttura }}
+        </td>
+        <td >{{ risorsa.disponibilita[0].denominazioneStruttura }}
+        </td>
+        <td >
+          {{ fieldsService.convertDate(risorsa.inizioValidita) }}
+        </td>
+        <td >
+          {{ fieldsService.convertDate(risorsa.fineValidita) }}
+         </td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination *ngIf="!loading " [paginationService]="paginationService" class="flex-shrink-1"></pagination>
+</div>
+<!--content-->

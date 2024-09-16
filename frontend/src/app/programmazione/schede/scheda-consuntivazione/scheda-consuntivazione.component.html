@@ -1,0 +1,215 @@
+<div>
+  <span *ngIf="loading">
+    <div class="loader">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </span>
+  <div *ngIf="!readAllowed()">
+    <span *ngIf="!loading">{{ "no read allowed" | translate }}</span>
+  </div>
+  <div>
+    <div *ngIf="!loading">
+      <scheda-titolo
+        (vaiAScheda)="vaiAScheda($event)"
+        (eseguiRichiesta)="eseguiRichiesta($event)"
+        [nodo]="nodo"
+        [currentProgrammazione]="currentProgrammazione"
+        [writer]="writeAllowed()"
+        [reader]="readAllowed()"
+        [admin]="false"
+        [scheda]="'/consuntivazione/scheda'"
+      ></scheda-titolo>
+    </div>
+    <div class="d-flex flex-wrap mt-4" *ngIf="getCurrentNodoTipoId() != 0">
+      <div class="col-3" *ngIf="visualizzaField('codice')">
+        <b>{{ "codice" | translate }}:</b>
+      </div>
+      <div class="col-9" *ngIf="visualizzaField('codice')">
+        <span>
+          {{ nodo?.codiceRidotto }}
+        </span>
+      </div>
+      <div class="col-3" *ngIf="visualizzaField('organizzazione')">
+        <b>{{ "unita organizzativa principale" | translate }}:</b>
+      </div>
+      <div class="col-9" *ngIf="visualizzaField('organizzazione')">
+        <span *ngIf="nodo?.organizzazione">
+          {{ nodo?.organizzazione?.denominazione }}
+        </span>
+      </div>
+
+      <div class="col-3" *ngIf="visualizzaField('organizzazioni')">
+        <b>{{ "unita organizzative coinvolte" | translate }}:</b>
+      </div>
+      <div class="col-9" *ngIf="visualizzaField('organizzazioni')">
+        <span
+          *ngFor="let organizzazione of nodo?.organizzazioni; let isLast = last"
+          >{{ organizzazione?.denominazione }}
+          <br *ngIf="!isLast" />
+        </span>
+      </div>
+
+      <div class="col-3" *ngIf="visualizzaField('descrizione')">
+        <b>{{ "descrizione" | translate }}:</b>
+      </div>
+      <div
+        class="col-9"
+        *ngIf="visualizzaField('descrizione')"
+        [innerHTML]="nodo?.descrizione"
+      ></div>
+
+      <div class="col-3" *ngIf="visualizzaField('responsabile')">
+        <b>{{ "responsabile" | translate }}:</b>
+      </div>
+      <div class="col-9" *ngIf="visualizzaField('responsabile')">
+        <span *ngIf="nodo?.responsabile">
+          {{ nodo?.responsabile }}
+        </span>
+      </div>
+
+      <div class="col-3" *ngIf="visualizzaField('strategico')">
+        <b>{{ "strategico" | translate }}:</b>
+      </div>
+      <div class="col-9" *ngIf="visualizzaField('strategico')">
+        <span>
+          {{ nodo?.strategico ? "SI" : "NO" }}
+        </span>
+      </div>
+
+      <div class="col-3" *ngIf="visualizzaField('inizio')">
+        <b>{{ "inizio" | translate }}:</b>
+      </div>
+      <div class="col-9" *ngIf="visualizzaField('inizio')">
+        <span>
+          {{ fieldsService.convertDate(nodo?.inizio) }}
+        </span>
+      </div>
+      <div class="col-3" *ngIf="visualizzaField('scadenza')">
+        <b>{{ "scadenza" | translate }}:</b>
+      </div>
+      <div class="col-9" *ngIf="visualizzaField('scadenza')">
+        <span>
+          {{ fieldsService.convertDate(nodo?.scadenza) }}
+        </span>
+      </div>
+
+      <div class="col-3" *ngIf="getCurrentNodoTipoId() > 1">
+        <b>{{ getNodoPadre() | translate }}:</b>
+      </div>
+      <div class="col-9" *ngIf="getCurrentNodoTipoId() > 1">
+        <span>
+          {{ nodo?.padre?.codiceRidotto }} {{ nodo?.padre?.denominazione }}
+        </span>
+      </div>
+
+      <div class="col-3" *ngIf="nodo?.statoAvanzamentoS1">
+        <b
+          >{{ "stato avanzamento" | translate }}
+          {{ "primo semestre" | translate }}:</b
+        >
+      </div>
+      <div class="col-9" *ngIf="nodo?.statoAvanzamentoS1">
+        <span>
+          {{ nodo?.statoAvanzamentoS1 }}
+        </span>
+      </div>
+
+      <div class="col-3" *ngIf="nodo?.statoAvanzamentoS2">
+        <b
+          >{{ "stato avanzamento" | translate }}
+          {{ "secondo semestre" | translate }}:</b
+        >
+      </div>
+      <div class="col-9" *ngIf="nodo?.statoAvanzamentoS2">
+        <span>
+          {{ nodo?.statoAvanzamentoS2 }}
+        </span>
+      </div>
+
+      <div class="col-3" *ngIf="nodo?.percentualeRaggiungimentoForzata">
+        <b>{{ "percentuale raggiungimento forzata risorse" | translate }}:</b>
+      </div>
+      <div class="col-9" *ngIf="nodo?.percentualeRaggiungimentoForzata">
+        <span> {{ nodo?.percentualeRaggiungimentoForzata }}% </span>
+      </div>
+      <div class="col-3" *ngIf="nodo?.percentualeRaggiungimentoForzataResp">
+        <b
+          >{{
+            "percentuale raggiungimento forzata responsabile" | translate
+          }}:</b
+        >
+      </div>
+      <div class="col-9" *ngIf="nodo?.percentualeRaggiungimentoForzataResp">
+        <span> {{ nodo?.percentualeRaggiungimentoForzataResp }}% </span>
+      </div>
+    </div>
+  </div>
+  <br /><br />
+  <table class="table align-middle table-responsive table-big" *ngIf="!loading">
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">{{ "indicatore" | translate }}</th>
+        <th scope="col">{{ "tipo indicatore" | translate }}</th>
+        <th scope="col">{{ "scadenza indicatore" | translate }}</th>
+        <th scope="col">{{ "target" | translate }}</th>
+        <th scope="col">{{ "risultato" | translate }} 30/06</th>
+        <th scope="col">{{ "risultato" | translate }} 31/12</th>
+        <th scope="col">{{ "percentuale raggiungimento" | translate }}</th>
+        <!-- <th scope="col" *ngIf="getCurrentNodoTipoId()==5">{{"valida"|translate}}</th> -->
+        <!-- <th scope="col">{{"respingi"|translate}}</th> -->
+        <!-- <th scope="col" *ngIf="getCurrentNodoTipoId()==5">{{"proponi"|translate}}</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let indicatore of indicatori; let i = index"
+        [ngClass]="{ oddRow: indicatore.oddRow }"
+      >
+        <th scope="row">#{{ indicatore?.id }}</th>
+        <td>{{ indicatore?.denominazione }}</td>
+        <td>{{ indicatore?.tipoIndicatore }}</td>
+        <td>{{ indicatore?.scadenzaIndicatore }}</td>
+        <td>{{ indicatore.preventivo4?.valore }}</td>
+        <td>
+          <button
+            *ngIf="indicatore?.consuntivo2?.enabled"
+            type="button"
+            (click)="risultatoPopup(indicatore?.id, indicatore?.consuntivo2)"
+            class="btn btn-secondary"
+          >
+            <i-bs name="pen" width="1.5rem" height="1.5rem"></i-bs>
+          </button>
+          {{ indicatore?.consuntivo2?.valore }}&nbsp;
+        </td>
+        <td>
+          <button
+            *ngIf="indicatore?.consuntivo4?.enabled"
+            type="button"
+            (click)="risultatoPopup(indicatore.id, indicatore?.consuntivo4)"
+            class="btn btn-secondary"
+          >
+            <i-bs name="pen" width="1.5rem" height="1.5rem"></i-bs>
+          </button>
+          {{ indicatore?.consuntivo4?.valore }}&nbsp;
+        </td>
+        <td>
+          {{
+            indicatore?.raggiungimentoPerc
+              ? indicatore.raggiungimentoPerc + "%"
+              : "0%"
+          }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination
+    *ngIf="!loading"
+    [paginationService]="paginationService"
+    class="flex-shrink-1"
+  ></pagination>
+</div>
+
+<!--content-->

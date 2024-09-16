@@ -1,0 +1,160 @@
+<div class="modal-header">
+  <h5 class="modal-title" id="exampleModalLabel">
+    <span>{{'forzatura e allegati'|translate}}</span>
+  </h5>
+  <button type="button" class="close" (click)="activeModal.close()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+
+
+  <div class="custom-tab-cnt">
+    <div class="custom-tab" [ngClass]="{'active':!page || page==='forzatura'}"><a
+        (click)='setPage("forzatura")'>{{'forzatura'|translate}}</a></div>
+    <div class="custom-tab" [ngClass]="{'active':(page==='allegati' || page==='addallegato')}"><a
+        (click)='setPage("allegati")'>{{'allegati'|translate}}</a></div>
+  </div>
+
+  <span class="loading" *ngIf="loading">
+    <div class="spinner-border" role="status">
+      <span class="sr-only"></span>
+    </div>
+  </span>
+
+  <div class="" *ngIf="!loading && creaForm && (!page || page==='forzatura')">
+    <form [formGroup]="richiestaForm" (ngSubmit)="onSubmitRichiesta()">
+
+      <div class="row">
+        <div class="col-md-12 mb-2 mt-2">
+           <strong> {{"richiesta"|translate}}</strong>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mb-2">
+          <label for="richiestaforzatura">{{"richiesta forzatura"|translate}}</label>
+          <input [readonly]="!writeAllowed" [ngClass]="{ 'is-invalid': f2.forzatura.errors }" id="richiestaforzatura" type="number" class="form-control form-control-border" formControlName="forzatura">
+        </div>
+        <div class="col-md-12 mb-2">
+          <label for="richiestanote">{{"richiesta note"|translate}}</label>
+          <textarea [readonly]="!writeAllowed" id="richiestanote" class="form-control form-control-border" type="text" formControlName="note"
+          placeholder="{{'richiesta note'|translate}}" [ngClass]="{ 'is-invalid': f2.note.errors }"></textarea>
+        </div>
+      </div>
+      <div class="col-md-12 mb-3">
+        <button *ngIf="writeAllowed"  [disabled]="richiestaForm.invalid" class="btn btn-primary">{{'salva'|translate}}</button>&nbsp;
+      </div>
+
+    </form>
+    <form [formGroup]="creaForm" (ngSubmit)="onSubmit()">
+
+      <div class="row">
+        <div class="col-md-12 mb-2">
+           <strong> {{"forzatura"|translate}}</strong>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mb-2">
+          <label for="forzatura">{{"forzatura"|translate}}</label>
+          <input [readonly]="!writeAllowed"  id="forzatura" [ngClass]="{ 'is-invalid': f.forzatura.errors }"  type="number" class="form-control form-control-border" formControlName="forzatura">
+        </div>
+
+        <div class="col-md-12 mb-2">
+          <label for="nonValutabile">{{"non valutabile"|translate}}</label>
+          <div class="form-check form-switch">
+            <input *ngIf="writeAllowed" class="form-check-input" formControlName="nonValutabile"
+            type="checkbox">
+            <input *ngIf="!writeAllowed" [attr.disabled]="true" class="form-check-input" formControlName="nonValutabile"
+            type="checkbox">
+          </div>
+        </div>
+
+        <div class="col-md-12 mb-2">
+          <label for="note">{{"note"|translate}}</label>
+          <textarea [readonly]="!writeAllowed"  id="note" class="form-control form-control-border" type="text" formControlName="note"
+          placeholder="{{'note'|translate}}" [ngClass]="{ 'is-invalid': f.note.errors }"></textarea>
+        </div>
+      </div>
+
+
+      <div class="col-md-12 mb-3">
+        <button *ngIf="writeAllowed"  [disabled]="creaForm.invalid" class="btn btn-primary">{{'salva'|translate}}</button>&nbsp;
+        <a (click)="activeModal.close()" type="button" class="btn btn-secondary">{{'annulla'|translate}}</a>
+      </div>
+
+    </form>
+
+  </div>
+
+  <div class="" *ngIf="page==='allegati'">
+
+    <button *ngIf="!loading && writeAllowed" type="button" (click)="aggiungiAllegato()"
+      class="btn btn-primary float-right"><i-bs name="plus" width="1.5rem" height="1.5rem"></i-bs></button>
+
+
+    <table *ngIf="!loading && allegati" class="table align-middle table-responsive table-big">
+      <thead>
+        <tr>
+          <th scope="col">{{"nome"|translate}}</th>
+          <th scope="col">{{"tipo"|translate}}</th>
+          <th scope="col">{{"descrizione"|translate}}</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let allegato of allegati; let i=index" [ngClass]="{'oddRow': i%2}">
+          <td>{{ allegato.fileName }}</td>
+          <td>{{ allegato.contentType }}</td>
+          <td>{{ allegato.descrizione }}</td>
+          <td>
+            <button type="button"  (click)="viewAllegato(allegato.id)"
+            class="btn btn-secondary"><i-bs name="eye" width="1.5rem" height="1.5rem"></i-bs>
+          </button>&nbsp;
+          <button *ngIf="writeAllowed" type="button"  (click)="deleteAllegato(allegato.id)"
+          class="btn btn-primary"><i-bs name="trash" width="1.5rem" height="1.5rem"></i-bs>
+        </button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <iframe *ngIf="pdfObj" width="100%" height="500px" [src]="pdfObj"></iframe>
+
+
+  </div>
+
+  <div class="" *ngIf="page==='addallegato'">
+    <form *ngIf="!loading" [formGroup]="addForm" (ngSubmit)="onSubmitAllegato()">
+
+      <div class="row">
+        <div class="col-md-12 mb-2 mt-4">
+           <strong> {{"aggiungi allegato"|translate}}</strong>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mb-2">
+          <input  (change)="fileChangeEvent($event)"  class="form-control form-control-border" type="file" formControlName="file">
+        </div>
+
+        <div class="col-md-12 mb-2">
+          <label for="descrizione">{{"descrizione"|translate}}</label>
+          <textarea id="descrizione" class="form-control form-control-border" type="text" formControlName="descrizione"
+          placeholder="{{'descrizione'|translate}}" [ngClass]="{ 'is-invalid': f.descrizione.errors }"></textarea>
+        </div>
+      </div>
+
+
+      <div class="col-md-12 mb-3 text-right">
+        
+        <a (click)="activeModal.close()" type="button" class="btn btn-secondary">{{'annulla'|translate}}</a>
+        <button [disabled]="addForm.invalid" class="btn btn-primary paceleft10">{{'salva'|translate}}</button>
+      </div>
+
+    </form>
+
+
+  </div>
+
+</div>

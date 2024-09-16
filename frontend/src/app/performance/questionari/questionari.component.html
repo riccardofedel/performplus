@@ -1,0 +1,55 @@
+<div class="content">
+  <div class="breadcrumb"><a [routerLink]="['/home']">{{'home'|translate}}</a><span *ngIf="page!=='organigramma' ">&nbsp;-&nbsp;<a
+      (click)="vaiAQuestionari()">{{'questionari'|translate}}</a></span></div>
+  <div class="title">{{page|translate}}</div>
+
+  <performancebar page="{{page}}"></performancebar>
+
+  <div class="maincnt">
+    
+    <div class="p-3"
+      *ngIf="!loading && !permissionService.getPermission(currentUser,Permission.Questionari,true)">
+      {{"no permesso"|translate}}
+    </div>
+
+    <div *ngIf="!loading && permissionService.getPermission(currentUser,Permission.Questionari,true)">
+
+      <scheda-ricerca (confirmSearch) ="confirmSearch($event)"></scheda-ricerca> 
+
+      <button [disabled]="!showTree || !showData" (click)="nascondiAlbero()" class="btn btn-icon" 
+        title="{{'nascondi albero'|translate}}">
+        <i-bs name="arrow-left-circle" width="1.5rem" height="1.5rem"></i-bs>
+      </button>
+      <button [disabled]="showTree && showData" (click)="mostraTutto()" class="btn btn-icon" 
+        title="{{'mostra tutto'|translate}}">
+        <i-bs name="arrow-up-circle" width="1.5rem" height="1.5rem"></i-bs>
+      </button>
+      <button  [disabled]="!showData || !showTree" (click)="nascondiData()" class="btn btn-icon"
+        title="{{'nascondi dati'|translate}}">
+          <i-bs name="arrow-right-circle" width="1.5rem" height="1.5rem"></i-bs>
+      </button>
+      
+      
+    </div>
+
+
+    <div class="treecnt" *ngIf="!loading && permissionService.getPermission(currentUser,Permission.Questionari,true)">
+      <div class="d-flex flex-wrap align-items-center justify-content-center">
+        <div [ngClass]="{'col-12':true, 'col-sm-3':showData, 'col-sm-12':!showData,'treescroll':true, 'hidetree':!showTree}">
+          <div class="tree ">
+            <scheda-albero #schedaAlbero [searchData]="alberoQuestionariService.getSearchData()"></scheda-albero>
+          </div>
+        </div>
+        <div [ngClass]="{'col-12':true, 'col-sm-9':showTree, 'col-sm-12':!showTree, 'treescroll':true, 'treespace': true, 'hidetree':!showData }">
+          <ng-container [ngSwitch]="alberoQuestionariService.currentScheda">
+              <scheda-questionario *ngSwitchCase="'/questionari/scheda'" (cambiaScheda)="cambiaScheda($event)" 
+              (ricaricaFigli)="ricaricaFigli($event)" 
+              (ricaricaFigliPadre)="ricaricaFigliPadre($event)" 
+              [currentNodo]="alberoQuestionariService.currentNodo"></scheda-questionario>
+          </ng-container>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

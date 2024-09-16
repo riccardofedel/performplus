@@ -1,0 +1,56 @@
+<div>
+  <span *ngIf="loading">
+    <div class="loader">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </span>
+  <div *ngIf="!loading && !readAllowed()">
+    {{"no read allowed"|translate}}
+  </div>
+  <div *ngIf="readAllowed() && !loading">
+    <scheda-titolo (vaiAScheda)="vaiAScheda($event)" (eseguiRichiesta)="eseguiRichiesta($event)"
+      [currentStruttura]="currentStruttura" [writer]="writeAllowed()" [reader]="readAllowed()"
+      [scheda]="'/struttura/risorse'"></scheda-titolo>
+    <div class="box-2-title mt-2">{{"gestione risorse"|translate}}</div>
+  </div>
+   <br><br>
+  <table class="table align-middle table-responsive table-big" *ngIf="!loading">
+    <thead>
+       <tr>
+                <th scope="col">{{"risorsa umana"|translate}}</th>
+                <th scope="col">{{"matricola"|translate}}</th>
+                <!-- <th scope="col">{{"codice fiscale"|translate}}</th> -->
+                <th scope="col">{{"email"|translate}}</th>
+                <th scope="col">{{"inizio"|translate}}</th>
+                <th scope="col">{{"fine"|translate}}</th>
+                <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let risorsa of risorse; let i=index" [ngClass]="{'oddRow': (i%2)}">
+                <td>{{ risorsa.cognome }} {{ risorsa.nome }}</td>
+                <td>{{ risorsa.codiceInterno }}</td>
+                <!-- <td>{{ risorsa.codiceFiscale }}</td> -->
+                <td>{{ risorsa.email }}</td>
+                <td>
+                  {{ fieldsService.convertDate(risorsa.inizioValidita) }}
+                </td>
+                <td>
+                  {{ fieldsService.convertDate(risorsa.fineValidita) }}
+                </td>
+                <td class="text-end">
+                  <a *ngIf="getCurrentLevel()" title="{{'rimuovi risorsa'|translate}}" (click)="elimina(risorsa.id)"
+                    class="btn btn-free">
+                    <i-bs name="trash" width="1.5rem" height="1.5rem"></i-bs>
+                  </a>
+
+                </td>
+
+              </tr>
+    </tbody>
+  </table>
+  <pagination [paginationService]="paginationService" class="flex-shrink-1"></pagination>
+</div>
+<!--content-->

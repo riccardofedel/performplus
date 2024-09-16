@@ -1,0 +1,8 @@
+<ul *ngIf="alberoQuestionariService?.nodoAperto">
+  <li>
+    <elemento-albero
+      [livello]="0"
+      [elemento]="alberoQuestionariService.nodoAperto"
+    ></elemento-albero>
+  </li>
+</ul>

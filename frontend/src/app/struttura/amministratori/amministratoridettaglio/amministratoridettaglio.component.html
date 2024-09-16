@@ -1,0 +1,91 @@
+<div class="content">
+  <div class="breadcrumb"><a [routerLink]="['/home']">{{'home'|translate}}</a> -     <a [routerLink]="['/struttura']">{{'struttura'|translate}}</a> </div>
+  <div class="title">{{'amministratori'|translate}}</div>
+
+  <strutturabar [page]="amministratoreId?'amministratori':'crea'"></strutturabar>
+
+  <div class="maincnt">
+
+
+    <span *ngIf="loading">
+      <div class="loader">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </span>
+
+    <div class="p-3"
+    *ngIf="!loading && !permissionService.getPermission(currentUser,Permission.AmministratoriStruttura,false)">
+    {{"no permesso"|translate}}
+  </div>
+
+  <div *ngIf="!loading && permissionService.getPermission(currentUser,Permission.AmministratoriStruttura,false)">
+      <div *ngIf="creaForm">
+
+            <form [formGroup]="creaForm" (ngSubmit)="onSubmit()">
+
+              <div class="row">
+                <div class="col-md-12 mb-3">
+                  <div class="box-2-title" *ngIf="amministratoreId; else elseBlock">{{"modifica amministratore"|translate}}</div>
+                  <ng-template #elseBlock><div class="box-2-title">{{"crea amministratore"|translate}}</div></ng-template>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                  <label for="nome">{{'nome'|translate}} *</label>
+                  <input id="nome" type="text" class="form-control form-control-border" formControlName="nome"
+                    placeholder="{{'nome'|translate}}" [ngClass]="{ 'is-invalid': f.nome.errors }">
+                </div>
+
+                <div class="col-md-12 mb-3">
+                  <label for="cognome">{{'cognome'|translate}} *</label>
+                  <input id="cognome" type="text" class="form-control form-control-border" formControlName="cognome"
+                    placeholder="{{'cognome'|translate}}" [ngClass]="{ 'is-invalid': f.cognome.errors }">
+                </div>
+
+                <div class="col-md-12 mb-3">
+                  <label for="codiceFiscale">{{'codice fiscale'|translate}}</label>
+                  <input id="codiceFiscale" type="text" class="form-control form-control-border" formControlName="codiceFiscale"
+                    placeholder="{{'codice fiscale'|translate}}" [ngClass]="{ 'is-invalid': f.codiceFiscale.errors }">
+                </div>
+
+                <div class="col-md-12 mb-3">
+                  <label class="form-control-placeholder-select" for="funzione">{{"funzione"|translate}}</label>
+                  <ng-select
+                  [ngClass]="{ 'is-invalid': !f.funzione.value }"
+                   id="funzione" [items]="funzioni" [searchable]="false" [clearable]="false" bindLabel="descrizione" bindValue="codice"
+                    formControlName="funzione" placeholder=" ">
+                    <ng-template ng-option-tmp let-item="item">
+                      <label>{{item.descrizione}}</label>
+                    </ng-template>
+                    <ng-template ng-label-tmp let-item="item">
+                      <span>{{item.descrizione}}</span>
+                    </ng-template>
+                  </ng-select>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                  <label for="delega">{{'delega'|translate}}</label>
+                  <textarea maxlength="500" id="delega" formControlName="delega" class="form-control" [ngClass]="{
+                    'is-invalid':
+                      f.delega.errors}" type="text" placeholder=" ">
+                </textarea>
+                </div>
+
+
+
+                <div class="col-md-12 mb-3 text-right">
+                  
+                  <a [routerLink]="['/struttura/amministratori']" type="button" class="btn btn-secondary">{{'annulla'|translate}}</a>
+                  <button [disabled]="creaForm.invalid" class="btn btn-primary spaceleft10">{{'salva'|translate}}</button>
+                </div>
+
+              </div>
+            </form>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+<!--content-->

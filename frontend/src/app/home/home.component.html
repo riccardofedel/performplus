@@ -1,0 +1,146 @@
+<div class="content">
+  <div class="breadcrumb">
+    <a [routerLink]="['/home']">{{ "home" | translate }}</a>
+  </div>
+  <div class="title">{{ "dashboard" | translate }}</div>
+  <br /><br /><br />
+  <div class="container">
+    <div class="row g-4" *ngIf="!activeUser">
+      {{ "utente non abilitato" | translate }}
+    </div>
+    <div class="row g-4" *ngIf="activeUser">
+      <div
+        class="col col-12 col-sm-6 col-md-4"
+        *ngIf="
+          permissionService.getPermission(currentUser, Permission.Sistema, true)
+        "
+      >
+        <a [routerLink]="['/sistema/utenti']" class="box">
+          <div class="box-title">{{ "sistema" | translate }}<br /><br /></div>
+          <div class="d-flex box-link">
+            <div class="d-flex align-items-center">
+              <div class="box-image"><img src="./assets/img/gear.png" /></div>
+              <div class="box-text">
+                {{ "sistema descrizione" | translate }}
+              </div>
+              <div class="box-arrow">
+                <i-bs name="arrow-right" width="1.5rem" height="1.5rem"></i-bs>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div
+        class="col col-12 col-sm-6 col-md-4"
+        *ngIf="
+          permissionService.getPermission(
+            currentUser,
+            Permission.Struttura,
+            true
+          )
+        "
+      >
+        <a [routerLink]="['/struttura']" class="box">
+          <div class="box-title">
+            {{ "struttura organizzativa" | translate }}<br /><br />
+          </div>
+          <div class="box-link">
+            <div class="d-flex align-items-center">
+              <div class="box-image d-flex">
+                <img src="./assets/img/hierarchical-structure.png" />
+              </div>
+              <div class="box-text d-flex">
+                {{ "struttura organizzativa descrizione" | translate }}
+              </div>
+              <div class="box-arrow">
+                <i-bs name="arrow-right" width="1.5rem" height="1.5rem"></i-bs>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div
+        class="col col-12 col-sm-6 col-md-4"
+        *ngIf="
+          permissionService.getPermission(currentUser, Permission.Dup, true)
+        "
+      >
+        <a [routerLink]="['/programmazione']" class="box">
+          <div class="box-title">
+            {{ "programmazione e rendicontazione" | translate }}<br /><br />
+          </div>
+          <div class="d-flex box-link">
+            <div class="d-flex align-items-center">
+              <div class="box-image">
+                <img src="./assets/img/calculator.png" />
+              </div>
+              <div class="box-text">
+                {{ "programmazione descrizione" | translate }}
+              </div>
+              <div class="box-arrow">
+                <i-bs name="arrow-right" width="1.5rem" height="1.5rem"></i-bs>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div
+        class="col col-12 col-sm-6 col-md-4"
+        *ngIf="
+          permissionService.getPermission(currentUser, Permission.Stampe, true)
+        "
+      >
+        <a [routerLink]="['/stampe']" class="box">
+          <div class="box-title">
+            {{ "report e stampe" | translate }}<br /><br /><br />
+          </div>
+          <div class="d-flex box-link">
+            <div class="d-flex align-items-center">
+              <div class="box-image">
+                <img src="./assets/img/printer.png" />
+              </div>
+              <div class="box-text">{{ "stampe descrizione" | translate }}</div>
+              <div class="box-arrow">
+                <i-bs name="arrow-right" width="1.5rem" height="1.5rem"></i-bs>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div
+        class="col col-12 col-sm-6 col-md-4"
+        *ngIf="
+          permissionService.getPermission(
+            currentUser,
+            Permission.Performance,
+            true
+          )
+        "
+      >
+        <a [routerLink]="['/performance']" class="box">
+          <div class="box-title">
+            {{ "performance individuale" | translate }}<br /><br /><br />
+          </div>
+          <div class="d-flex box-link">
+            <div class="d-flex align-items-center">
+              <div class="box-image">
+                <img src="./assets/img/performance.png" />
+              </div>
+              <div class="box-text">
+                {{ "performance individuale descrizione" | translate }}
+              </div>
+              <div class="box-arrow">
+                <i-bs name="arrow-right" width="1.5rem" height="1.5rem"></i-bs>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!--content-->

@@ -1,0 +1,102 @@
+<div class="modal-header">
+  <h5 class="modal-title" id="exampleModalLabel">
+   {{
+      "sposta nodo"  | translate
+    }}
+  </h5>
+  <button
+    type="button"
+    class="close"
+    (click)="activeModal.close()"
+    aria-label="Close"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <span class="loading" *ngIf="loading">
+    <div class="spinner-border" role="stus">
+      <span class="sr-only"></span>
+    </div>
+  </span>
+
+  <div class="" *ngIf="!loading && spostaForm">
+    <form [formGroup]="spostaForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="nuovoPadre">{{ "nuovo padre" | translate }} *</label>
+              <ng-select
+                [ngClass]="{ 'is-invalid': !f.nuovoPadre.value }"
+                id="nuovoPadre"
+                [multiple]="false"
+                [items]="obiettivi"
+                [searchable]="false"
+                [clearable]="false"
+                bindLabel="denominazione"
+                bindValue="id"
+                formControlName="nuovoPadre"
+                placeholder=" "
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <label>{{ item.codiceInterno+" "+item.denominazione }}</label>
+                </ng-template>
+                <ng-template ng-label-tmp let-item="item">
+                  <span>{{ item.codiceInterno+" "+item.denominazione }}</span>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label
+                class="form-control-placeholder-select"
+                for="organizzazione"
+                >{{ "unita organizzativa principale" | translate }} *</label
+              >
+              <ng-select
+                [ngClass]="{ 'is-invalid': !f.organizzazione.value }"
+                id="organizzazione"
+                [multiple]="false"
+                [items]="organizzazioni"
+                [searchable]="false"
+                [clearable]="false"
+                bindLabel="denominazione"
+                bindValue="id"
+                formControlName="organizzazione"
+                placeholder=" "
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <label>{{ item.denominazione }}</label>
+                </ng-template>
+                <ng-template ng-label-tmp let-item="item">
+                  <span>{{ item.denominazione }}</span>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-end">
+          <div class="col-md-12 mb-3 text-right">
+            <a
+              (click)="activeModal.close()"
+              type="button"
+              class="btn btn-secondary"
+              >{{ "annulla" | translate }}</a
+            >
+            <button
+              [disabled]="spostaForm.invalid"
+              class="btn btn-primary spaceleft10"
+            >
+              {{ "sposta" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+<div class="custom-tab-cnt">
+
+  <!-- <div class="custom-tab dropdown" *ngIf="permissionService.getPermission(currentUser,Permission.DupIntroduzione,true)
+  && introduzioneElementi" #dropdown>
+    <button class="btnrop btn btn-bd-light dropdown-toggle" type="button" id="dropdownMenuButton1"
+      (click)="dropdownShown['top']=!dropdownShown['top']">
+      {{'introduzione'|translate}}
+    </button>
+    <ul *ngIf="permissionService.getPermission(currentUser,Permission.DupIntroduzione,true)"
+      class="dropdown-menu dropdown-menu-shown" [hidden]="!dropdownShown['top']" aria-labelledby="dropdownMenuButton1">
+      <li *ngFor="let introduzione of introduzioneElementi">
+        <div class="dropend" #dropend>
+
+          <button class="btn btn-bd-light dropdown-toggle" type="button" [id]="'dropdown'+introduzione.key"
+            (click)="toggleDropDown(introduzione.key)">
+            {{introduzione.key|translate}}
+
+          </button>
+          <ul class="dropdown-menu dropdown-menu-shown" [hidden]="!dropdownShown[introduzione.key]">
+            <li *ngFor="let item of introduzione.values"><a class="dropdown-item"
+                (click)="cambiaIntroduzione(introduzione.key+'@'+item)">{{item|translate}}</a></li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div> -->
+
+  <div *ngIf="permissionService.getPermission(currentUser,Permission.DupProgrammazione,true)" class="custom-tab"
+    [ngClass]="{'active':page==='programmazione'}"><a (click)="vaiAProgrammazione()">{{'programmazione'|translate}}</a>
+  </div>
+  <div *ngIf="permissionService.getPermission(currentUser,Permission.DupConsuntivazione,true)" class="custom-tab"
+    [ngClass]="{'active':page==='consuntivazione'}"><a
+      (click)="vaiAConsuntivazione()">{{'consuntivazione'|translate}}</a></div>
+</div>

@@ -1,0 +1,20 @@
+
+      <div class="" *ngIf="cercaForm">
+        <div class="d-flex flex-wrap align-items-center justify-content-center">
+        </div>
+        <div class="" *ngIf="cercaForm">
+        <form [formGroup]="cercaForm" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <div class="d-flex flex-wrap align-items-center">
+              <div class="col col-12 col-md-3">
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" formControlName="cerca" placeholder="">
+                  <button class="btn btn-primary" type="submit">
+                    <i-bs name="search" width="1.5rem" height="1.5rem"></i-bs>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>

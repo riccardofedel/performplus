@@ -1,0 +1,64 @@
+<div *ngIf="paginationService" class="paginatore">
+  <div class="row">
+    <div class="col-4">
+      <label class="p-2">{{ "mostra" | translate }} </label>
+      <label>
+        <select
+          [(ngModel)]="tendina"
+          required
+          (ngModelChange)="onChangeTendina($event)"
+          id="inputState"
+          class="form-control"
+        >
+          <option *ngFor="let value of values; let i = index">
+            {{ value }}
+          </option>
+          <!--<option selected>25</option>
+                <option>50</option>
+                <option>100</option>-->
+        </select>
+      </label>
+      <label class="p-2">{{ "risultati" | translate }} </label>
+    </div>
+
+    <div class="col-4 text-center">
+      <div class="align-middle" *ngIf="paginationService.getItemCount()">
+        {{ "righe" | translate }}
+        {{ paginationService.getFirst() }}-{{ paginationService.getLast() }} di
+        {{ paginationService.getItemCount() }}
+      </div>
+    </div>
+
+    <div class="col-4 text-end">
+      <div class="flex-fill float-end" *ngIf="paginationService.getTotalPage() > 1">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li
+              *ngFor="let page of paginationService.getPages(); let i = index"
+              class="page-item"
+            >
+              <a
+                *ngIf="page == paginationService.getPage()"
+                class="active page-link"
+                >{{ page }}</a
+              >
+              <a *ngIf="page == -1" class="page-link">...</a>
+              <a
+                *ngIf="page != paginationService.getPage() && page != -1"
+                class="page-link"
+                (click)="goToPage(page)"
+                >{{ page }}</a
+              >
+            </li>
+            <li *ngIf="!paginationService.isFirstPage()" class="page-item">
+              <a class="page-link" (click)="prev()">{{ "prev" | translate }}</a>
+            </li>
+            <li *ngIf="!paginationService.isLastPage()" class="page-item">
+              <a class="page-link" (click)="next()">{{ "next" | translate }}</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

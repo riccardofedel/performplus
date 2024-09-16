@@ -1,0 +1,9 @@
+<div class="custom-tab-cnt">
+  <div class="custom-tab" [ngClass]="{'active':page==='regolamento'}" *ngIf="admin" ><a [routerLink]="['/performance/regolamento']">{{'regolamenti'|translate}}</a></div>
+  <div class="custom-tab" [ngClass]="{'active':page==='questionari'}"  *ngIf="admin"><a [routerLink]="['/performance/questionari']">{{'comportamenti'|translate}}</a></div>
+  <div class="custom-tab" [ngClass]="{'active':page==='registrazioni'}" *ngIf="admin"><a [routerLink]="['/performance']">{{'registrazioni'|translate}}</a></div>
+  <div class="custom-tab" [ngClass]="{'active':page==='priorita'}" *ngIf="responsabile||admin"><a [routerLink]="['/performance/priorita']">{{'priorita'|translate}}</a></div>
+  <div class="custom-tab" [ngClass]="{'active':page==='valutazioni'}" *ngIf="responsabile||admin"><a [routerLink]="['/performance/valutazioni']">{{'gestione valutazioni'|translate}}</a></div>
+  <div class="custom-tab" [ngClass]="{'active':page==='valutazione'}" *ngIf="risorsa || responsabile||referente"><a [routerLink]="['/performance/valutazione']">{{'propria valutazione'|translate}}</a></div>
+ </div>
+

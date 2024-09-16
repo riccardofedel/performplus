@@ -1,0 +1,48 @@
+<div class="content login-page">
+  <div class="container">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="d-flex flex-wrap align-items-center justify-content-center mt-5">
+        <div class="col col-11 col-md-4">
+          <div class="box">
+            <div class="box-title pb-0">Login</div>
+            <div class="d-flex align-items-center">
+              <div class="row">
+                <div class="col-md-12 mb-3">
+                  <label for="username">{{ "username" | translate }}</label>
+                  <input
+                    id="username"
+                    class="form-control form-control-border"
+                    type="text"
+                    formControlName="username"
+                    placeholder="{{ 'username' }}"
+                    [ngClass]="{
+                      'is-invalid': submitted && f.username.errors
+                    }"
+                  />
+                </div>
+                <div class="col-md-12 mb-3">
+                  <label for="password">{{ "password" | translate }}</label>
+                  <input
+                    class="form-control form-control-border"
+                    type="password"
+                    formControlName="password"
+                    [ngClass]="{
+                      'is-invalid': submitted && f.password.errors
+                    }"
+                    placeholder="{{ 'password' }}"
+                    autocomplete="off"
+                  />
+                </div>
+                <div class="col-md-12 mb-3 text-right">
+                  <button [disabled]="loading" class="btn btn-primary px-4">
+                    {{ "login" | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

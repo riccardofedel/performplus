@@ -1,0 +1,18 @@
+<span class="tree-icon"
+  *ngIf="elemento.children"
+  [ngClass]="{ 'tree-icon-open': isClosed(elemento.id), 'tree-icon-close': !isClosed(elemento.id) }"
+  (click)="toggle(elemento)"></span>
+<img class="tree-folder" [src]="getImage(livello,elemento.id)"
+  (click)="toggle(elemento)">
+<a class="struttura"
+  [ngClass]="{'selected':alberoStrutturaService.currentStruttura.id===elemento.id}"
+  (click)="select(elemento)">{{elemento?.item}}</a>
+<ul *ngIf="!isClosed(elemento.id)">
+  <li *ngFor="let children of elemento.children">
+
+    <elemento-albero *ngIf="(livello?livello:0)<20" [livello]="(livello?livello:0)+1"  [elemento]="children"></elemento-albero>
+
+
+  </li>
+
+</ul>

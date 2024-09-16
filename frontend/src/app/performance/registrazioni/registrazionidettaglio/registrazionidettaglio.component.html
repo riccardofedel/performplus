@@ -1,0 +1,348 @@
+<div class="content">
+  <div class="breadcrumb">
+    <a [routerLink]="['/home']">{{ "home" | translate }}</a> -
+    <a [routerLink]="['/sistema']">{{ "performance" | translate }}</a>
+  </div>
+  <div class="title">{{ "registrazioni" | translate }}</div>
+
+  <performancebar page="registrazioni"></performancebar>
+
+  <div
+    class="p-3"
+    *ngIf="
+      !loading &&
+      !permissionService.getPermission(currentUser, Permission.Sistema, false)
+    "
+  >
+    {{ "no permesso" | translate }}
+  </div>
+
+  <div
+    class="maincnt"
+    *ngIf="
+      !loading &&
+      permissionService.getPermission(currentUser, Permission.Sistema, false)
+    "
+  >
+    <span *ngIf="loading">
+      <div class="loader">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </span>
+
+    <div class="" *ngIf="creaForm">
+      <form [formGroup]="creaForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <div class="box-2-title" *ngIf="registrazioneId; else elseBlock">
+              {{ "modifica registrazione" | translate }}
+            </div>
+            <ng-template #elseBlock
+              ><div class="box-2-title">
+                {{ "nuova registrazione" | translate }}
+              </div></ng-template
+            >
+          </div>
+
+          <div class="col-md-12 mb-3">
+            <label class="form-control-placeholder-select" for="idValutatore"
+              >{{ "valutatore" | translate }} *</label
+            >
+
+            <ng-autocomplete
+              style="width: 100%"
+              [ngClass]="{ 'is-invalid': !f.idValutatore.value }"
+              class="form-control"
+              formControlName="idValutatore"
+              [data]="valutatori"
+              [isLoading]="isLoadingValutatori"
+              [minQueryLength]="0"
+              placeholder="Cerca per cognome"
+              [searchKeyword]="keyword"
+              (inputChanged)="onChangeValutatoriSearch($event)"
+              [itemTemplate]="itemTemplate"
+              [notFoundTemplate]="notFoundTemplate"
+            >
+            </ng-autocomplete>
+
+            <ng-template #itemTemplate let-item>
+              <a [innerHTML]="item.description"></a>
+            </ng-template>
+
+            <ng-template #notFoundTemplate let-notFound>
+              <div [innerHTML]="notFound"></div>
+            </ng-template>
+          </div>
+
+          <div class="col-md-12 mb-3">
+            <label class="form-control-placeholder-select" for="idValutato"
+              >{{ "valutato" | translate }} *</label
+            >
+
+            <ng-autocomplete
+              style="width: 100%"
+              [ngClass]="{ 'is-invalid': !f.idValutato.value }"
+              class="form-control"
+              formControlName="idValutato"
+              [data]="valutati"
+              [isLoading]="isLoadingValutati"
+              [minQueryLength]="0"
+              placeholder="Cerca per cognome"
+              [searchKeyword]="keyword"
+              (inputChanged)="onChangeValutatiSearch($event)"
+              [itemTemplate]="itemTemplate"
+              [notFoundTemplate]="notFoundTemplate"
+            >
+            </ng-autocomplete>
+
+            <ng-template #itemTemplate let-item>
+              <a [innerHTML]="item.description"></a>
+            </ng-template>
+
+            <ng-template #notFoundTemplate let-notFound>
+              <div [innerHTML]="notFound"></div>
+            </ng-template>
+          </div>
+
+          <div class="col-md-12 mb-3">
+            <label
+              class="form-control-placeholder-select"
+              for="idOrganizzazione"
+              >{{ "organizzazione" | translate }} *</label
+            >
+
+            <ng-select
+              id="idOrganizzazione"
+              [multiple]="false"
+              [items]="organizzazioni"
+              [searchable]="false"
+              [clearable]="false"
+              bindLabel="codice"
+              bindValue="id"
+              formControlName="idOrganizzazione"
+              placeholder=" "
+            >
+              <ng-template ng-option-tmp let-item="item">
+                <label>{{ item.codice }}</label>
+              </ng-template>
+              <ng-template ng-label-tmp let-item="item">
+                <span>{{ item.codice }}</span>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="col-md-12 mb-3">
+            <label class="form-control-placeholder-select" for="idRegolamento"
+              >{{ "regolamento" | translate }} *</label
+            >
+
+            <ng-select
+              id="idRegolamento"
+              [multiple]="false"
+              [items]="regolamenti"
+              [searchable]="false"
+              [clearable]="false"
+              bindLabel="codice"
+              bindValue="id"
+              formControlName="idRegolamento"
+              placeholder=" "
+            >
+              <ng-template ng-option-tmp let-item="item">
+                <label>{{ item.codice }}</label>
+              </ng-template>
+              <ng-template ng-label-tmp let-item="item">
+                <span>{{ item.codice }}</span>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="col-md-12 mb-3">
+            <label class="form-control-placeholder-select" for="idQuestionario"
+              >{{ "questionario" | translate }} *</label
+            >
+
+            <ng-select
+              id="idQuestionario"
+              [multiple]="false"
+              [items]="questionari"
+              [searchable]="false"
+              [clearable]="false"
+              bindLabel="codice"
+              bindValue="id"
+              formControlName="idQuestionario"
+              placeholder=" "
+            >
+              <ng-template ng-option-tmp let-item="item">
+                <label>{{ item.codice }}</label>
+              </ng-template>
+              <ng-template ng-label-tmp let-item="item">
+                <span>{{ item.codice }}</span>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="col col-12 col-md-4 mb-3">
+            <label class="form-control-placeholder-select" for="inizioValidita"
+              >{{ "inizio validita" | translate }} *</label
+            >
+            <div class="input-group">
+              <input
+                id="inizioValidita"
+                class="datepicker form-control"
+                placeholder=""
+                name="inizioValidita"
+                formControlName="inizioValidita"
+                type="date"
+              />
+            </div>
+          </div>
+
+          <div class="col col-12 col-md-4 mb-3">
+            <label class="form-control-placeholder-select" for="fineValidita"
+              >{{ "fine validita" | translate }} *</label
+            >
+            <div class="input-group">
+              <input
+                id="fineValidita"
+                class="datepicker form-control"
+                placeholder=""
+                name="fineValidita"
+                formControlName="fineValidita"
+                type="date"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-12 mb-3">
+            <div class="col-md-2 form-check-inline">
+              <label class="custom-control-label" for="responsabile">{{
+                "responsabile" | translate
+              }}</label>
+              <div class="form-check form-switch">
+                <input
+                  id="responsabile"
+                  class="form-check-input"
+                  formControlName="responsabile"
+                  type="checkbox"
+                />
+              </div>
+            </div>
+            <div class="col-md-2 form-check-inline">
+              <label class="custom-control-label" for="po">{{
+                "po" | translate
+              }}</label>
+              <div class="form-check form-switch">
+                <input
+                  id="po"
+                  class="form-check-input"
+                  formControlName="po"
+                  type="checkbox"
+                />
+              </div>
+            </div>
+            
+            <div class="col-md-2 form-check-inline">
+              <label class="custom-control-label" for="interim">{{
+                "interim" | translate
+              }}</label>
+              <div class="form-check form-switch">
+                <input
+                  id="interim"
+                  class="form-check-input"
+                  formControlName="interim"
+                  type="checkbox"
+                />
+              </div>
+            </div>
+          </div>
+          <br/>
+          <div class="col-md-12 mb-3">
+            <div class="col-md-2 form-check-inline">
+              <label class="custom-control-label" for="forzaSchedaSeparata">{{
+                "scheda separata" | translate
+              }}</label>
+              <div class="form-check form-switch">
+                <input
+                  id="forzaSchedaSeparata"
+                  class="form-check-input"
+                  formControlName="forzaSchedaSeparata"
+                  type="checkbox"
+                />
+              </div>
+            </div>
+            <div class="col-md-2 form-check-inline">
+              <label class="custom-control-label" for="inattiva">{{
+                "non valutare" | translate
+              }}</label>
+              <div class="form-check form-switch">
+                <input
+                  id="inattiva"
+                  class="form-check-input"
+                  formControlName="inattiva"
+                  type="checkbox"
+                />
+              </div>
+            </div>
+
+            <div class="col-md-2 form-check-inline">
+              <label class="custom-control-label" for="forzaValutatore">{{
+                "valutatore forzato" | translate
+              }}</label>
+              <div class="form-check form-switch">
+                <input
+                  id="forzaValutatore"
+                  class="form-check-input"
+                  formControlName="forzaValutatore"
+                  type="checkbox"
+                />
+              </div>
+            </div>
+
+            <div class="col-md-2 form-check-inline">
+              <label class="custom-control-label" for="mancataAssegnazione">{{
+                "mancata assegnazione" | translate
+              }}</label>
+              <div class="form-check form-switch">
+                <input
+                  id="mancataAssegnazione"
+                  class="form-check-input"
+                  formControlName="mancataAssegnazione"
+                  type="checkbox"
+                />
+              </div>
+            </div>
+            
+            <div class="col-md-2 form-check-inline">
+              <label class="custom-control-label" for="mancatoColloquio">{{
+                "mancato colloquio" | translate
+              }}</label>
+              <div class="form-check form-switch">
+                <input
+                  id="mancatoColloquio"
+                  class="form-check-input"
+                  formControlName="mancatoColloquio"
+                  type="checkbox"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12 mb-3 text-right">
+            <a
+              [routerLink]="['/performance']"
+              type="button"
+              class="btn btn-secondary"
+              >{{ "annulla" | translate }}</a
+            >&nbsp;
+            <button [disabled]="" class="btn btn-primary">
+              {{ "salva" | translate }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--content-->

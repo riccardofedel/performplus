@@ -1,0 +1,89 @@
+<div class="d-flex flex-wrap align-items-center justify-content-center">
+  <div class="col-12">
+    <div class="box-2-title">
+      <strong>{{ "intestazione" | translate }}</strong
+      >: {{ getCurrentNodoTipoId()==='root'?'':getCurrentNodoTipoId() | translate }} {{ currentNodo?.item }}
+    </div>
+
+    <div #menuprogdropdown class="float-right">
+      <i-bs
+        class="three-dots-vertical"
+        name="three-dots-vertical"
+        width="1.5rem"
+        height="1.5rem"
+        (click)="menuprog = !menuprog"
+      ></i-bs>
+      <div class="menuprog" *ngIf="menuprog">
+        <button
+          *ngIf="
+            getCurrentNodoTipoId() === 'root' &&
+            writeAllowed() &&
+            scheda == '/questionari/scheda'
+          "
+          type="button"
+          (click)="aggiungiNodo()"
+          class="btn btn-primary"
+        >
+          <i-bs name="plus" width="1.5rem" height="1.5rem"></i-bs>
+          {{ "aggiungi questionario" | translate }}
+        </button>
+        <button
+          *ngIf="
+            (getCurrentNodoTipoId() === 'questionario' || (getCurrentNodoTipoId() === 'ambito' && !getCurrentFoglia()))
+            &&
+            writeAllowed() &&
+            scheda == '/questionari/scheda'
+          "
+          type="button"
+          (click)="aggiungiNodo()"
+          class="btn btn-primary"
+        >
+          <i-bs name="plus" width="1.5rem" height="1.5rem"></i-bs>
+          {{ "aggiungi ambito" | translate }}
+        </button>
+        <button
+          *ngIf="
+            getCurrentNodoTipoId() === 'ambito' && getCurrentFoglia() &&
+            writeAllowed() &&
+            scheda == '/questionari/scheda'
+          "
+          type="button"
+          (click)="aggiungiNodo()"
+          class="btn btn-primary"
+        >
+          <i-bs name="plus" width="1.5rem" height="1.5rem"></i-bs>
+          {{ "aggiungi valore" | translate }}
+        </button>
+        &nbsp;
+        <button
+          type="button"
+          *ngIf="
+            getCurrentNodoTipoId() !== 'root' &&
+            writeAllowed() &&
+            scheda == '/questionari/scheda'
+          "
+          (click)="modificaNodo()"
+          class="btn btn-primary"
+        >
+          <i-bs name="pen" width="1.5rem" height="1.5rem"></i-bs>
+          {{ "modifica" | translate }}
+        </button>
+        &nbsp;
+        <button
+          type="button"
+          *ngIf="
+            getCurrentNodoTipoId() !== 'root' &&
+            writeAllowed() &&
+            scheda == '/questionari/scheda'
+          "
+          (click)="elimina()"
+          class="btn btn-primary"
+        >
+          <i-bs name="trash" width="1.5rem" height="1.5rem"></i-bs>
+          {{ "elimina" | translate }}
+        </button>
+        &nbsp;
+      </div>
+    </div>
+  </div>
+</div>

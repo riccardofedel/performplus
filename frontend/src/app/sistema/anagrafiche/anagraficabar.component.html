@@ -1,0 +1,8 @@
+<div class="custom-tab-cnt" *ngIf="permissionService.getPermission(currentUser,Permission.Sistema,true)">
+  <div class="custom-tab" [ngClass]="{'active':page==='tag'}"><a [routerLink]="['/sistema/anagrafiche/tag']">{{'titolo tag'|translate}}</a></div>
+  <div class="custom-tab" [ngClass]="{'active':page==='territorio'}"><a [routerLink]="['/sistema/anagrafiche/territorio']">{{'titolo territorio'|translate}}</a></div>
+  <div class="custom-tab" [ngClass]="{'active':page==='stakeholder'}"><a [routerLink]="['/sistema/anagrafiche/stakeholder']">{{'titolo stakeholder'|translate}}</a></div>
+  <div class="custom-tab" [ngClass]="{'active':page==='soggettoEnte'}"><a [routerLink]="['/sistema/anagrafiche/soggettoEnte']">{{'titolo soggettoEnte'|translate}}</a></div>
+  <div class="custom-tab" [ngClass]="{'active':page==='strategia'}"><a [routerLink]="['/sistema/anagrafiche/strategia']">{{'titolo strategia'|translate}}</a></div>
+  <div class="custom-tab" [ngClass]="{'active':page==='pnrr'}"><a [routerLink]="['/sistema/anagrafiche/pnrr']">{{'titolo pnrr'|translate}}</a></div>
+</div>

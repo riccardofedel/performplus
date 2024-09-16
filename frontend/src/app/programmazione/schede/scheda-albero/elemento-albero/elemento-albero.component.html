@@ -1,0 +1,19 @@
+<span class="tree-icon"
+  *ngIf="elementoProgrammazione.children"
+  [ngClass]="{ 'tree-icon-open': isClosed(elementoProgrammazione.id), 'tree-icon-close': !isClosed(elementoProgrammazione.id) }"
+  (click)="toggle(elementoProgrammazione)"></span>
+<img class="tree-folder" [src]="getImage(elementoProgrammazione)"
+  (click)="toggle(elementoProgrammazione)">
+<a class="programmazione"
+  [ngClass]="{'selected':alberoProgrammazioneService.currentProgrammazione?.id===elementoProgrammazione.id}"
+  (click)="select(elementoProgrammazione)">{{elementoProgrammazione?.item}}</a>
+<ul *ngIf="!isClosed(elementoProgrammazione.id)">
+  <li *ngFor="let children of elementoProgrammazione.children">
+
+    <!-- limite di sicurezza per ricorsione-->
+    <elemento-albero *ngIf="(livello?livello:0)<20" [isConsuntivazione]="isConsuntivazione"  
+    [livello]="(livello?livello:0)+1" [elementoProgrammazione]="children"></elemento-albero>
+
+  </li>
+
+</ul>

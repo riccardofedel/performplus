@@ -1,0 +1,428 @@
+<div class="content">
+  <div class="breadcrumb"><a [routerLink]="['/home']">{{'home'|translate}}</a> - <a
+      [routerLink]="['/sistema']">{{'sistema'|translate}}</a></div>
+  <div class="title">{{'cruscotto'|translate}}</div>
+
+  <sistemabar page="cruscotto"></sistemabar>
+  <span *ngIf="loading">
+    <div class="loader">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </span>
+  <div class="p-3" *ngIf="!loading && !permissionService.getPermission(currentUser,Permission.Sistema,true)">
+    {{"no permesso"|translate}}
+  </div>
+  <div *ngIf="!loading && permissionService.getPermission(currentUser,Permission.Sistema,true)">
+    <form [formGroup]="cruscottoForm" (ngSubmit)="onSubmit()">
+      <div class="subtitle">{{"fase di programmazione"|translate}} {{permissionService.annoCorrente(currentUser)}}</div>
+      <div class="box-2">
+        <div class="row justify-content-center">
+          <div class="col" *ngIf="cruscottoForm">
+            <div class="table-responsive">
+              <table class="table align-middle table-big">
+                <thead>
+                  <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                  <td> {{"inizializzazione anno"|translate}}</td>
+                  <td>
+                    <div class="input-group input-responsive">
+                      <input readonly class="datepicker form-control" type="date"
+                        formControlName="dataInizializzazioneAnno" >
+                    </div>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                      <div class="form-check form-switch">
+                        <input *ngIf="writeAllowed() && !inizializzazioneAnno" class="form-check-input" formControlName="flagInizializzazioneAnno"
+                          type="checkbox">
+                        <input *ngIf="!writeAllowed() || inizializzazioneAnno" [attr.disabled]="true" class="form-check-input"
+                          formControlName="flagInizializzazioneAnno" type="checkbox">
+                      </div>
+                    </td>
+                </tr>
+                  <tr>
+                    <td> {{"avvio programmazione"|translate}}
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataAttivazioneInserimentoInterventiDa">
+                      </div>
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataAttivazioneInserimentoInterventiA"
+                          [ngClass]="{ 'is-invalid': dateInverse(f.dataAttivazioneInserimentoInterventiA,f.dataAttivazioneInserimentoInterventiDa)}">
+                      </div>
+                    </td>
+                    <td></td>
+                    <td>
+                      <div class="form-check form-switch">
+                        <input *ngIf="writeAllowed()" class="form-check-input" formControlName="flagAttivazioneInserimentoInterventi"
+                          type="checkbox">
+                        <input *ngIf="!writeAllowed()" [attr.disabled]="true" class="form-check-input"
+                          formControlName="flagAttivazioneInserimentoInterventi" type="checkbox">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{"inserimento azioni"|translate}}
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataAttivazioneInserimentoIndicatoriDa">
+                      </div>
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataAttivazioneInserimentoIndicatoriA"
+                          [ngClass]="{ 'is-invalid': dateInverse(f.dataAttivazioneInserimentoIndicatoriA,f.dataAttivazioneInserimentoIndicatoriDa)}">
+                      </div>
+                    </td>
+                    <td></td>
+                    <td>
+                      <div *ngIf="writeAllowed()" class="form-check form-switch">
+                        <input *ngIf="writeAllowed()" class="form-check-input"
+                          formControlName="flagAttivazioneInserimentoIndicatori" type="checkbox">
+                        <input *ngIf="!writeAllowed()" [attr.disabled]="true" class="form-check-input"
+                          formControlName="flagAttivazioneInserimentoIndicatori" type="checkbox">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{"validazione piano"|translate}}
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataValidazionePiano">
+                      </div>
+                    </td>
+                    <td>
+                    </td>
+                    <td></td>
+                    <td>
+                      <div *ngIf="writeAllowed()" class="form-check form-switch">
+                        <input *ngIf="writeAllowed()" class="form-check-input"
+                          formControlName="flagValidazionePiano" type="checkbox">
+                        <input *ngIf="!writeAllowed()" [attr.disabled]="true" class="form-check-input"
+                          formControlName="flagValidazionePiano" type="checkbox">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{"chiusura piano"|translate}}
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataChiusuraPiano">
+                      </div>
+                    </td>
+                    <td>
+                     </td>
+                    <td></td>
+                    <td>
+                      <div *ngIf="writeAllowed()" class="form-check form-switch">
+                        <input *ngIf="writeAllowed()" class="form-check-input" formControlName="flagChiusuraPiano"
+                          type="checkbox">
+                        <input *ngIf="!writeAllowed()" [attr.disabled]="true" class="form-check-input"
+                          formControlName="flagChiusuraPiano" type="checkbox">
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+
+                    <td>
+                      {{"approvazione finale"|translate}}
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataApprovazioneFinale">
+                      </div>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                      <div class="form-check form-switch">
+                        <input *ngIf="writeAllowed()" class="form-check-input" formControlName="flagApprovazioneFinale"
+                          type="checkbox">
+                        <input *ngIf="!writeAllowed()" [attr.disabled]="true" class="form-check-input"
+                          formControlName="flagApprovazioneFinale" type="checkbox">
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="subtitle">{{"consuntivazione"|translate}}</div>
+      <div class="box-2">
+        <div class="clearfix"></div>
+        <div class="row justify-content-center">
+          <div class="col" *ngIf="cruscottoForm">
+            <div class="table-responsive table-unset">
+              <table class="table align-middle table-big">
+                <tbody>
+                  <tr>
+                    <td> {{"rendicontazione primo semestre"|translate}}
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataConsuntivazioneS1Da">
+                      </div>
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          [ngClass]="{ 'is-invalid': dateInverse(f.dataConsuntivazioneS1Da,f.dataConsuntivazioneS1A)}"
+                          formControlName="dataConsuntivazioneS1A">
+                      </div>
+                    </td>
+                    <td></td>
+                    <td>
+                      <div class="form-check form-switch">
+                        <input *ngIf="writeAllowed()" class="form-check-input" formControlName="flagConsuntivazioneS1"
+                          type="checkbox">
+                        <input *ngIf="!writeAllowed()" [attr.disabled]="true" class="form-check-input"
+                          formControlName="flagConsuntivazioneS1" type="checkbox">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td> {{"rendicontazione secondo semestre"|translate}}
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataConsuntivazioneS2Da"
+                        >
+                      </div>
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataConsuntivazioneS2A"
+                          [ngClass]="{ 'is-invalid': dateInverse(f.dataConsuntivazioneS2Da,f.dataConsuntivazioneS2A)}">
+                      </div>
+                    </td>
+                    <td></td>
+                    <td>
+                      <div class="form-check form-switch">
+                        <input *ngIf="writeAllowed()" class="form-check-input" formControlName="flagConsuntivazioneS2"
+                          type="checkbox">
+                        <input *ngIf="!writeAllowed()" [attr.disabled]="true" class="form-check-input"
+                          formControlName="flagConsuntivazioneS2" type="checkbox">
+                      </div>
+                    </td>
+                  </tr>
+                 </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+           <div class="subtitle">{{"performance individuale"|translate}}</div>
+      <div class="box-2">
+        <div class="clearfix"></div>
+        <div class="row justify-content-center">
+          <div class="col" *ngIf="cruscottoForm">
+            <div class="table-responsive table-unset">
+              <table class="table align-middle table-big">
+                <tbody>
+                  <tr>
+                    <td> {{"creazione schede"|translate}}
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataCreazioneSchedaDa">
+                      </div>
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          [ngClass]="{ 'is-invalid': dateInverse(f.dataCreazioneSchedaDa,f.dataCreazioneSchedaA)}"
+                          formControlName="dataCreazioneSchedaA">
+                      </div>
+                    </td>
+                    <td></td>
+                    <td>
+                      <div class="form-check form-switch">
+                        <input *ngIf="writeAllowed()" class="form-check-input" formControlName="flagCreazioneScheda"
+                          type="checkbox">
+                        <input *ngIf="!writeAllowed()" [attr.disabled]="true" class="form-check-input"
+                          formControlName="flagCreazioneScheda" type="checkbox">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td> {{"conferma scheda"|translate}}
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataConfermaSchedaDa"
+                        >
+                      </div>
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataConfermaSchedaA"
+                          [ngClass]="{ 'is-invalid': dateInverse(f.dataConfermaSchedaDa,f.dataConfermaSchedaA)}">
+                      </div>
+                    </td>
+                    <td></td>
+                    <td>
+                      <div class="form-check form-switch">
+                        <input *ngIf="writeAllowed()" class="form-check-input" formControlName="flagConfermaScheda"
+                          type="checkbox">
+                        <input *ngIf="!writeAllowed()" [attr.disabled]="true" class="form-check-input"
+                          formControlName="flagConfermaScheda" type="checkbox">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td> {{"assegnazione performance organizzativa"|translate}}
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataPerformanceOrgDa"
+                        >
+                      </div>
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataPerformanceOrgA"
+                          [ngClass]="{ 'is-invalid': dateInverse(f.dataPerformanceOrgDa,f.dataPerformanceOrgA)}">
+                      </div>
+                    </td>
+                    <td></td>
+                    <td>
+                      <div class="form-check form-switch">
+                        <input *ngIf="writeAllowed()" class="form-check-input" formControlName="flagPerformanceOrg"
+                          type="checkbox">
+                        <input *ngIf="!writeAllowed()" [attr.disabled]="true" class="form-check-input"
+                          formControlName="flagPerformanceOrg" type="checkbox">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td> {{"completamento scheda"|translate}}
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataCompletamentoSchedaDa"
+                        >
+                      </div>
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataCompletamentoSchedaA"
+                          [ngClass]="{ 'is-invalid': dateInverse(f.dataCompletamentoSchedaDa,f.dataCompletamentoSchedaA)}">
+                      </div>
+                    </td>
+                    <td></td>
+                    <td>
+                      <div class="form-check form-switch">
+                        <input *ngIf="writeAllowed()" class="form-check-input" formControlName="flagCompletamentoScheda"
+                          type="checkbox">
+                        <input *ngIf="!writeAllowed()" [attr.disabled]="true" class="form-check-input"
+                          formControlName="flagCompletamentoScheda" type="checkbox">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td> {{"validazione scheda"|translate}}
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataValidazioneSchedaDa"
+                        >
+                      </div>
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataValidazioneSchedaA"
+                          [ngClass]="{ 'is-invalid': dateInverse(f.dataValidazioneSchedaDa,f.dataValidazioneSchedaA)}">
+                      </div>
+                    </td>
+                    <td></td>
+                    <td>
+                      <div class="form-check form-switch">
+                        <input *ngIf="writeAllowed()" class="form-check-input" formControlName="flagValidazioneScheda"
+                          type="checkbox">
+                        <input *ngIf="!writeAllowed()" [attr.disabled]="true" class="form-check-input"
+                          formControlName="flagValidazioneScheda" type="checkbox">
+                      </div>
+                    </td>
+                  </tr>
+                   <tr>
+                    <td> {{"chiusura pi"|translate}}
+                    </td>
+                    <td>
+                      <div class="input-group input-responsive">
+                        <input [readonly]="!writeAllowed()" class="datepicker form-control" type="date"
+                          formControlName="dataChiusuraPI"
+                        >
+                      </div>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                      <div class="form-check form-switch">
+                        <input *ngIf="writeAllowed()" class="form-check-input" formControlName="flagChiusuraPI"
+                          type="checkbox">
+                        <input *ngIf="!writeAllowed()" [attr.disabled]="true" class="form-check-input"
+                          formControlName="flagChiusuraPI" type="checkbox">
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 mb-3 mt-3">
+        <button *ngIf="writeAllowed()"
+          [disabled]="loading 
+          || dateInverse(f.dataAttivazioneInserimentoInterventiDa,f.dataAttivazioneInserimentoInterventiA) 
+          || dateInverse(f.dataConsuntivazione01Da,f.dataConsuntivazione01A) 
+          || dateInverse(f.dataConsuntivazione02Da,f.dataConsuntivazione02A)"
+          class="float-right btn btn-primary px-4 mb-4">
+          {{ "salva" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

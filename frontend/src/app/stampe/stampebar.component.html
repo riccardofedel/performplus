@@ -1,0 +1,4 @@
+<div class="custom-tab-cnt" *ngIf="permissionService.getPermission(currentUser,Permission.Stampe,true)">
+  <div class="custom-tab" [ngClass]="{'active':page==='report'}"><a [routerLink]="['/stampe/report']">{{'report'|translate}}</a></div>
+  <div class="custom-tab" *ngIf="permissionService.getPermission(currentUser,Permission.Stampe,true)" [ngClass]="{'active':page==='stampe'}"><a [routerLink]="['/stampe/stampe']">{{'stampe'|translate}}</a></div>
+</div>

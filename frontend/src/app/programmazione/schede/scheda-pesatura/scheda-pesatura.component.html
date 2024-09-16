@@ -1,0 +1,65 @@
+<div>
+  <span *ngIf="loading">
+    <div class="loader">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </span>
+  <div *ngIf="!loading">
+    <div *ngIf="!loading && !readAllowed()">
+      {{"no read allowed"|translate}}
+    </div>
+    <div *ngIf="readAllowed() && !loading">
+        <scheda-titolo (vaiAScheda)="vaiAScheda($event)" (eseguiRichiesta)="eseguiRichiesta($event)"
+        [currentProgrammazione]="currentProgrammazione" [writer]="writeAllowed()" [reader]="readAllowed()"
+        [admin]="false" [scheda]="'/programmazione/pesatura'"></scheda-titolo>
+        <div class="box-2-title mt-2">{{"gestione pesatura"|translate}}</div>
+      <br><br>
+      <table class="table align-middle table-responsive table-big" *ngIf="!loading">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">{{"obiettivo"|translate}}</th>
+            <th scope="col">{{"peso"|translate}}</th>
+            <th scope="col">{{"peso relativo"|translate}}</th>
+            <th scope="col">{{"inizio"|translate}}</th>
+            <th scope="col">{{"scadenza"|translate}}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let obiettivo of obiettivi; let i=index" [ngClass]="{'oddRow': (i%2)}">
+                <th scope="row"><span [ngClass]="{'padre2':obiettivo.tipoNodo==TipoNodo.Area,
+                'padre':obiettivo.tipoNodo==TipoNodo.Obiettivo}">#{{ obiettivo.id }}</span>
+                  &nbsp;
+                  <img *ngIf="obiettivo.tipoNodo==TipoNodo.Obiettivo" class="tree-folder"
+                    src="./assets/img/folder3.png">
+
+                  <img *ngIf="obiettivo.tipoNodo==TipoNodo.Area" class="tree-folder"
+                    src="./assets/img/folder2.png">
+                  <img *ngIf="obiettivo.tipoNodo==TipoNodo.Piano" class="tree-folder" src="./assets/img/folder1.png">
+                </th>
+                <td>{{ obiettivo.denominazione }}</td>
+                <td>{{ obiettivo.peso }}</td>
+                <td>{{ obiettivo.pesoRelativo }}
+                </td>
+                <td>{{ fieldsService.convertDate(obiettivo.inizio) }}
+                </td>
+                <td>{{ fieldsService.convertDate(obiettivo.scadenza) }}
+                </td>
+                <td>
+                  <a *ngIf="obiettivo.tipoNodo!=TipoNodo.Piano && writeAllowed()" title="{{'modifica pesatura'|translate}}"
+                    (click)="modificaPesaturaPopup(obiettivo.id,obiettivo.tipoNodo)" class="btn btn-free">
+                    <i-bs class="m-0" name="pen" width="1.5rem" height="1.5rem"></i-bs>
+                  </a>
+
+                </td>
+              </tr>
+        </tbody>
+      </table>
+      <pagination [paginationService]="paginationService" class="flex-shrink-1"></pagination>
+    </div>
+  </div>
+
+  <!--content-->

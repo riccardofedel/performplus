@@ -1,0 +1,12 @@
+
+::ng-deep .ng-select.is-invalid .ng-select-container,
+input.is-invalid.form-control{
+    border: 1px solid #ced4dad !important;
+}
+
+::ng-deep input.is-invalid{
+    border: 1px solid #ced4da !important;
+}
+
+
+

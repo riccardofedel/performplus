@@ -1,0 +1,13 @@
+[
+    {
+        "key" : "firstName",
+        "type": "input",
+        "templateOptions": {
+             "label": "First Name",
+             "options": []
+        },
+        "expressionProperties":{},
+        "hideExpession": "",
+        "hooks":{}
+    }
+]

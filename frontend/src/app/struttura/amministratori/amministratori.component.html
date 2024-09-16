@@ -1,0 +1,95 @@
+<div class="content">
+  <div class="breadcrumb"><a [routerLink]="['/home']">{{'home'|translate}}</a> - <a
+      [routerLink]="['/struttura']">{{'struttura'|translate}}</a></div>
+  <div class="title">{{'amministratori'|translate}}</div>
+
+  <strutturabar page="amministratori"></strutturabar>
+
+  <div class="p-3"
+  *ngIf="!loading && !permissionService.getPermission(currentUser,Permission.AmministratoriStruttura,true)">
+  {{"no permesso"|translate}}
+</div>
+
+  <div *ngIf="permissionService.getPermission(currentUser,Permission.AmministratoriStruttura,true)">
+    <div class="maincnt">
+
+      <span *ngIf="loading">
+        <div class="loader">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </span>
+
+
+      <div class="row">
+        <div class="col-md-4">
+          <form [formGroup]="cercaForm" (ngSubmit)="onSubmit()" *ngIf="!loading && cercaForm">
+            <div class="input-group mb-3">
+              <input id="cerca" class="form-control" type="text" formControlName="cerca" placeholder="{{'Cerca'}}"
+                [ngClass]="{ 'is-invalid': f.cerca.errors }">
+              <button class="btn btn-primary">
+                <i-bs name="search" width="1.5rem" height="1.5rem"></i-bs>
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-8 text-end">
+          <a *ngIf="writeAllowed()"  [routerLink]="['/struttura/amministratori/crea']" class="btn btn-primary px-4">
+            <i-bs name="plus" width="1.5rem" height="1.5rem"></i-bs>{{'nuovo'|translate}}
+          </a>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+      <table class="table align-middle table-big" *ngIf="!loading">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">{{"codice interno"|translate}}</th>
+            <th scope="col">{{"nome"|translate}}</th>
+            <th scope="col">{{"cognome"|translate}}</th>
+            <th scope="col">{{"funzione"|translate}}</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let amministratore of amministratori; let i=index" [ngClass]="{'oddRow': (i%2)}">
+            <th scope="row">#{{ amministratore.id }}</th>
+            <th scope="row">{{ amministratore.codiceInterno }}</th>
+            <td>
+              {{ amministratore.nome }}
+            </td>
+            <td>
+              {{ amministratore.cognome }}
+            </td>
+            <td>
+              {{ amministratore.funzione }}
+
+            </td>
+            <td class="text-end">
+              <a *ngIf="writeAllowed()" title="{{'modifica amministratore'|translate}}"
+                [routerLink]="['/struttura/amministratori/dettaglio/'+amministratore.id]" class="btn btn-free">
+                <i-bs class="m-0" name="pen" width="1.5rem" height="1.5rem"></i-bs>
+              </a>
+              &nbsp;
+              <a *ngIf="writeAllowed()" title="{{'elimina amministratore'|translate}}" (click)="elimina(amministratore.id)"
+                class="btn btn-free">
+                <i-bs class="m-0" name="trash" width="1.5rem" height="1.5rem"></i-bs>
+              </a>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+      <div class="d-flex justify-content-between p-2">
+      </div>
+
+      <pagination [paginationService]="paginationService" class="flex-shrink-1"></pagination>
+
+    </div>
+  </div>
+</div>
+<!--content-->

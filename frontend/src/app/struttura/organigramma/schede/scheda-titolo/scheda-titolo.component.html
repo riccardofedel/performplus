@@ -1,0 +1,39 @@
+<div class="d-flex flex-wrap align-items-center justify-content-center">
+  <div class="col-12">
+    <div class="box-2-title"><strong>{{"intestazione"|translate}}</strong>: {{currentStruttura.item}}</div>
+    <div #menuprogdropdown class="float-right" *ngIf="writeAllowed()">
+      <i-bs class="three-dots-vertical" name="three-dots-vertical" width="1.5rem" height="1.5rem"
+        (click)="menuprog=!menuprog"></i-bs>
+      <div class="menuprog" *ngIf="menuprog">
+        <button *ngIf="writeAllowed() && getCurrentLevel()<3 && scheda=='/struttura/scheda'" type="button"
+          (click)="aggiungiStruttura()" class="btn btn-primary">
+          <i-bs name="plus" width="1.5rem" height="1.5rem"></i-bs> {{"aggiungi struttura"|translate}}
+        </button>
+        &nbsp;
+        <button *ngIf="writeAllowed() && getCurrentLevel()>0 && scheda=='/struttura/scheda'" type="button"
+          (click)="modificaStruttura()" class="btn btn-secondary">
+          <i-bs name="pen" width="1.5rem" height="1.5rem"></i-bs> {{"modifica struttura"|translate}}
+        </button>
+        &nbsp;
+        <button *ngIf="scheda=='/struttura/scheda' && getCurrentLevel()>0" (click)="vaiASchedaRisorse()" type="button"
+          class="btn btn-primary">
+          <i-bs name="plus" width="1.5rem" height="1.5rem"></i-bs> {{"gestione risorse"|translate}}
+        </button>
+        &nbsp;
+        <button *ngIf="writeAllowed() && getCurrentLevel()>0 && scheda=='/struttura/scheda'" type="button"
+          (click)="elimina()" class="btn btn-primary">
+          <i-bs name="trash" width="1.5rem" height="1.5rem"></i-bs> {{"elimina struttura"|translate}}
+        </button>
+        &nbsp;
+        <button type="button" *ngIf="writeAllowed() && getCurrentLevel()>0 && scheda=='/struttura/risorse'"
+          (click)="aggiungiRisorsa()" class="btn btn-primary">
+          <i-bs name="plus" width="1.5rem" height="1.5rem"></i-bs> {{"aggiungi risorsa"|translate}}
+        </button>
+        &nbsp;
+        <button type="button" *ngIf="writeAllowed() && getCurrentLevel()>0
+                 && scheda!=='/struttura/scheda'  " (click)="vaiAStruttura()" class="btn btn-primary">
+          <i-bs name="card-text" width="1.5rem" height="1.5rem"></i-bs> {{"organigramma"|translate}}
+        </button>
+      </div>
+    </div>
+  </div>

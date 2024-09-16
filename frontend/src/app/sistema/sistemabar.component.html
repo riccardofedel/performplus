@@ -1,0 +1,6 @@
+<div class="custom-tab-cnt" *ngIf="permissionService.getPermission(currentUser,Permission.Sistema,true)">
+  <div class="custom-tab" [ngClass]="{'active':page==='cruscotto'}"><a [routerLink]="['/sistema']">{{'cruscotto'|translate}}</a></div>
+  <div class="custom-tab" [ngClass]="{'active':page==='utenti' || page==='crea'}"><a [routerLink]="['/sistema/utenti']">{{'utenti'|translate}}</a></div>
+  <div class="custom-tab" [ngClass]="{'active':page==='indicatori' || page==='creaindicatore'}"><a [routerLink]="['/sistema/indicatori']">{{'indicatori'|translate}}</a></div>
+  <div class="custom-tab" [ngClass]="{'active':page==='Reports&Grafici'}"><a [routerLink]="['/sistema/Reports&Grafici']">{{'Reports&Grafici'|translate}}</a></div>
+</div>

@@ -1,0 +1,63 @@
+<div class="content">
+  <div class="breadcrumb"><a [routerLink]="['/home']">{{'home'|translate}}</a><span *ngIf="page!=='organigramma' ">&nbsp;-&nbsp;<a
+      (click)="vaiAStruttura()">{{'struttura'|translate}}</a></span></div>
+  <div class="title">{{page|translate}}</div>
+
+  <strutturabar page="{{page}}"></strutturabar>
+
+  <div class="maincnt">
+
+    <div class="p-3"
+      *ngIf="!loading && !permissionService.getPermission(currentUser,Permission.OrganigrammaStruttura,true)">
+      {{"no permesso"|translate}}
+    </div>
+
+    <div *ngIf="permissionService.getPermission(currentUser,Permission.OrganigrammaStruttura,true)">
+
+      <scheda-ricerca (confirmSearch) ="confirmSearch($event)"></scheda-ricerca> 
+
+      <button [disabled]="!showTree || !showData" (click)="nascondiAlbero()" class="btn btn-icon" 
+        title="{{'nascondi albero'|translate}}">
+        <i-bs name="arrow-left-circle" width="1.5rem" height="1.5rem"></i-bs>
+      </button>
+      <button [disabled]="showTree && showData" (click)="mostraTutto()" class="btn btn-icon" 
+        title="{{'mostra tutto'|translate}}">
+        <i-bs name="arrow-up-circle" width="1.5rem" height="1.5rem"></i-bs>
+      </button>
+      <button  [disabled]="!showData || !showTree" (click)="nascondiData()" class="btn btn-icon"
+        title="{{'nascondi dati'|translate}}">
+          <i-bs name="arrow-right-circle" width="1.5rem" height="1.5rem"></i-bs>
+      </button>
+      
+      <span *ngIf="loading">
+        <div class="loader">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </span>
+    </div>
+
+
+    <div class="treecnt" *ngIf="permissionService.getPermission(currentUser,Permission.OrganigrammaStruttura,true)">
+      <div class="d-flex flex-wrap align-items-center justify-content-center">
+        <div [ngClass]="{'col-12':true, 'col-sm-3':showData, 'col-sm-12':!showData,'treescroll':true, 'hidetree':!showTree}">
+          <div class="tree ">
+            <scheda-albero #schedaAlbero [searchData]="alberoStrutturaService.getSearchData()"></scheda-albero>
+          </div>
+        </div>
+        <div [ngClass]="{'col-12':true, 'col-sm-9':showTree, 'col-sm-12':!showTree, 'treescroll':true, 'treespace': true, 'hidetree':!showData }">
+          <ng-container [ngSwitch]="alberoStrutturaService.currentScheda">
+              <scheda-struttura *ngSwitchCase="'/struttura/scheda'" (cambiaScheda)="cambiaScheda($event)" 
+              (ricaricaFigli)="ricaricaFigli($event)" 
+              (ricaricaFigliPadre)="ricaricaFigliPadre($event)" 
+              [currentStruttura]="alberoStrutturaService.currentStruttura"></scheda-struttura>
+              <scheda-risorse *ngSwitchCase="'/struttura/risorse'" (cambiaScheda)="cambiaScheda($event)"
+              [currentStruttura]="alberoStrutturaService.currentStruttura"></scheda-risorse>
+          </ng-container>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
